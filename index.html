@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TOEIC 攻略 | ビジネス英語トレーナー</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --card2: #273449;
+    --accent: #38bdf8;
+    --accent2: #818cf8;
+    --green: #34d399;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: "Hiragino Sans", "Yu Gothic UI", "Segoe UI", sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; padding-bottom: 80px;
+    word-break: keep-all; overflow-wrap: anywhere;
+  }
+  header {
+    padding: 18px 16px 12px;
+    background: linear-gradient(135deg, #0c4a6e, #1e3a8a);
+    position: sticky; top: 0; z-index: 10;
+    box-shadow: 0 2px 12px rgba(0,0,0,.4);
+  }
+  header h1 { font-size: 1.15rem; display: flex; align-items: center; gap: 8px; }
+  header .sub { font-size: .72rem; color: #bae6fd; margin-top: 3px; }
+  main { max-width: 640px; margin: 0 auto; padding: 16px; }
+
+  /* ===== bottom nav ===== */
+  nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
+    display: flex; background: #0b1222;
+    border-top: 1px solid #334155;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  nav button {
+    flex: 1; background: none; border: none; color: var(--muted);
+    padding: 9px 2px 7px; font-size: .6rem; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-family: inherit;
+  }
+  nav button .ico { font-size: 1.25rem; }
+  nav button.active { color: var(--accent); }
+
+  /* ===== common ===== */
+  .card {
+    background: var(--card); border-radius: var(--radius);
+    padding: 18px 16px; margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  }
+  .section-title { font-size: .95rem; margin-bottom: 12px; color: var(--accent); font-weight: 600; }
+  .btn {
+    display: inline-block; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #0f172a; font-weight: 700; border: none; border-radius: 10px;
+    padding: 12px 20px; font-size: .95rem; cursor: pointer; font-family: inherit;
+    transition: transform .1s, opacity .15s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn.ghost { background: var(--card2); color: var(--text); font-weight: 600; }
+  .btn.small { padding: 8px 14px; font-size: .8rem; }
+  .btn:disabled { opacity: .4; cursor: default; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .pill {
+    background: var(--card2); border-radius: 999px; padding: 6px 14px;
+    font-size: .78rem; color: var(--muted); border: 1px solid transparent; cursor: pointer;
+    font-family: inherit;
+  }
+  .pill.on { border-color: var(--accent); color: var(--accent); }
+  .view { display: none; }
+  .view.active { display: block; animation: fade .25s; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; } }
+
+  /* ===== home ===== */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .stat {
+    background: var(--card2); border-radius: 12px; padding: 14px 8px; text-align: center;
+  }
+  .stat .num { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+  .stat .lbl { font-size: .68rem; color: var(--muted); margin-top: 3px; }
+  .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .menu-item {
+    background: var(--card); border-radius: var(--radius); padding: 18px 14px;
+    cursor: pointer; border: 1px solid #33415555; transition: border-color .15s;
+  }
+  .menu-item:active { border-color: var(--accent); }
+  .menu-item .mi-ico { font-size: 1.7rem; }
+  .menu-item .mi-title { font-weight: 700; margin-top: 8px; font-size: .92rem; }
+  .menu-item .mi-desc { font-size: .7rem; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+  /* ===== flashcard ===== */
+  .flash {
+    background: linear-gradient(145deg, var(--card), var(--card2));
+    border-radius: var(--radius); min-height: 250px; padding: 26px 20px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; cursor: pointer; margin-bottom: 14px;
+    border: 1px solid #33415577;
+  }
+  .flash .word { font-size: 1.9rem; font-weight: 800; letter-spacing: .02em; }
+  .flash .pos { color: var(--accent2); font-size: .8rem; margin-top: 6px; }
+  .flash .meaning { font-size: 1.25rem; font-weight: 700; color: var(--green); margin-top: 14px; }
+  .flash .example { font-size: .88rem; color: var(--muted); margin-top: 14px; line-height: 1.7; }
+  .flash .example b { color: var(--text); }
+  .flash .hint { font-size: .72rem; color: var(--muted); margin-top: 18px; }
+  .progress-bar { height: 6px; background: var(--card2); border-radius: 3px; overflow: hidden; margin-bottom: 12px; }
+  .progress-bar > div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .3s; }
+
+  /* ===== quiz ===== */
+  .q-text { font-size: 1.02rem; line-height: 1.9; margin-bottom: 16px; }
+  .q-text .blank { color: var(--amber); font-weight: 700; }
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice {
+    background: var(--card2); border: 1.5px solid transparent; border-radius: 10px;
+    padding: 13px 14px; text-align: left; color: var(--text); font-size: .95rem;
+    cursor: pointer; font-family: inherit; line-height: 1.5;
+  }
+  .choice:active { border-color: var(--accent); }
+  .choice.correct { border-color: var(--green); background: #34d39922; }
+  .choice.wrong { border-color: var(--red); background: #f8717122; }
+  .explain {
+    background: #0c4a6e33; border-left: 3px solid var(--accent);
+    border-radius: 8px; padding: 12px 14px; margin-top: 14px;
+    font-size: .85rem; line-height: 1.8; display: none;
+  }
+  .explain.show { display: block; animation: fade .3s; }
+  .explain .trans { color: var(--muted); margin-top: 6px; }
+  .passage {
+    background: var(--card2); border-radius: 10px; padding: 14px;
+    font-size: .88rem; line-height: 1.95; white-space: pre-wrap; margin-bottom: 6px;
+  }
+  .pq { border-top: 1px solid #33415566; margin-top: 16px; padding-top: 14px; }
+  .pq .prompt { font-size: .9rem; font-weight: 600; margin-bottom: 10px; line-height: 1.7; }
+  .accent-label { text-align: center; font-size: .8rem; color: var(--muted); margin-bottom: 12px; min-height: 1.2em; }
+  .result-big { text-align: center; padding: 20px 0; }
+  .result-big .score { font-size: 3rem; font-weight: 800; color: var(--accent); }
+  .result-big .msg { color: var(--muted); margin-top: 8px; font-size: .9rem; line-height: 1.7; }
+
+  /* ===== listening ===== */
+  .play-btn {
+    width: 82px; height: 82px; border-radius: 50%; border: none;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #0f172a; font-size: 2rem; cursor: pointer; display: block; margin: 10px auto 18px;
+    box-shadow: 0 4px 18px #38bdf855;
+  }
+  .play-btn:active { transform: scale(.95); }
+  .speed-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
+
+  /* ===== phrases ===== */
+  .phrase-card {
+    background: var(--card); border-radius: 12px; padding: 15px 16px; margin-bottom: 10px;
+    cursor: pointer; border: 1px solid #33415555;
+  }
+  .phrase-card .jp { font-size: .95rem; font-weight: 600; line-height: 1.6; }
+  .phrase-card .en {
+    display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #334155;
+    color: var(--green); font-size: .95rem; line-height: 1.6; font-weight: 600;
+  }
+  .phrase-card.open .en { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .phrase-card .spk { background: none; border: none; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; }
+  .phrase-card .tag { font-size: .62rem; color: var(--accent2); margin-bottom: 5px; }
+
+  /* ===== translator ===== */
+  textarea {
+    width: 100%; background: var(--card2); border: 1px solid #334155;
+    border-radius: 10px; color: var(--text); font-family: inherit;
+    padding: 13px; font-size: .95rem; min-height: 110px; resize: vertical;
+    line-height: 1.7;
+  }
+  textarea:focus { outline: none; border-color: var(--accent); }
+  .tr-result {
+    background: var(--card2); border-radius: 10px; padding: 14px;
+    margin-top: 12px; font-size: .95rem; line-height: 1.8; min-height: 60px;
+    white-space: pre-wrap;
+  }
+  .tr-result.loading { color: var(--muted); }
+  .dir-toggle {
+    display: flex; background: var(--card2); border-radius: 999px; padding: 4px; margin-bottom: 12px;
+  }
+  .dir-toggle button {
+    flex: 1; border: none; background: none; color: var(--muted); padding: 9px;
+    border-radius: 999px; font-size: .85rem; cursor: pointer; font-family: inherit; font-weight: 600;
+  }
+  .dir-toggle button.on { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #0f172a; }
+  .ext-links { display: flex; gap: 10px; margin-top: 12px; }
+  .ext-links a {
+    flex: 1; text-align: center; background: var(--card2); color: var(--muted);
+    text-decoration: none; border-radius: 10px; padding: 10px; font-size: .78rem;
+  }
+  .note { font-size: .7rem; color: var(--muted); margin-top: 10px; line-height: 1.7; }
+  .copy-btn { margin-top: 10px; }
+  .back-link { color: var(--muted); font-size: .8rem; background: none; border: none; cursor: pointer; font-family: inherit; margin-bottom: 12px; display: inline-block; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎯 TOEIC 攻略トレーナー</h1>
+  <div class="sub">昇格・キャリアアップのためのビジネス英語学習</div>
+</header>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<div class="view active" id="view-home">
+  <div class="card">
+    <div class="section-title">📊 学習記録</div>
+    <div class="stats">
+      <div class="stat"><div class="num" id="st-streak">0</div><div class="lbl">連続学習日数</div></div>
+      <div class="stat"><div class="num" id="st-total">0</div><div class="lbl">累計解答数</div></div>
+      <div class="stat"><div class="num" id="st-acc">-</div><div class="lbl">正答率</div></div>
+    </div>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-item" onclick="go('vocab')">
+      <div class="mi-ico">📚</div><div class="mi-title">単語カード</div>
+      <div class="mi-desc">スコア帯別の頻出単語を音声つきで暗記</div>
+    </div>
+    <div class="menu-item" onclick="go('grammar')">
+      <div class="mi-ico">✏️</div><div class="mi-title">リーディング</div>
+      <div class="mi-desc">Part 5・6・7 を時間を計って演習。速読力を強化</div>
+    </div>
+    <div class="menu-item" onclick="go('listening')">
+      <div class="mi-ico">🎧</div><div class="mi-title">リスニング</div>
+      <div class="mi-desc">音声を聞いて設問に答える実戦練習</div>
+    </div>
+    <div class="menu-item" onclick="go('phrases')">
+      <div class="mi-ico">💼</div><div class="mi-title">ビジネスフレーズ</div>
+      <div class="mi-desc">会議・メール・交渉ですぐ使える表現</div>
+    </div>
+    <div class="menu-item" onclick="go('translate')" style="grid-column: 1 / -1;">
+      <div class="mi-ico">🌐</div><div class="mi-title">翻訳ツール</div>
+      <div class="mi-desc">日本語⇔英語の翻訳。仕事のメール・資料の下書きに</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VOCAB ============ -->
+<div class="view" id="view-vocab">
+  <button class="back-link" onclick="go('home')">← ホームへ戻る</button>
+  <div class="row" style="margin-bottom:14px;" id="vocab-levels">
+    <button class="pill on" data-lv="600" onclick="setVocabLevel(this)">600点 基礎</button>
+    <button class="pill" data-lv="730" onclick="setVocabLevel(this)">730点 中級</button>
+    <button class="pill" data-lv="860" onclick="setVocabLevel(this)">860点+ 上級</button>
+  </div>
+  <div class="progress-bar"><div id="vocab-prog" style="width:0%"></div></div>
+  <div class="flash" id="flash-card" onclick="flipCard()"></div>
+  <div class="row" style="justify-content:space-between;">
+    <button class="btn ghost" onclick="prevCard()">← 前へ</button>
+    <button class="btn ghost" onclick="speakCard()">🔊 発音</button>
+    <button class="btn" onclick="nextCard()">次へ →</button>
+  </div>
+</div>
+
+<!-- ============ GRAMMAR ============ -->
+<div class="view" id="view-grammar">
+  <button class="back-link" onclick="go('home')">← ホームへ戻る</button>
+  <div class="row" style="margin-bottom:14px;" id="reading-parts">
+    <button class="pill on" data-part="5" onclick="setPart(this)">Part 5 文法</button>
+    <button class="pill" data-part="6" onclick="setPart(this)">Part 6 長文穴埋め</button>
+    <button class="pill" data-part="7" onclick="setPart(this)">Part 7 読解</button>
+  </div>
+  <div id="grammar-area"></div>
+</div>
+
+<!-- ============ LISTENING ============ -->
+<div class="view" id="view-listening">
+  <button class="back-link" onclick="go('home')">← ホームへ戻る</button>
+  <div class="row" style="margin-bottom:6px;" id="accent-row"></div>
+  <div class="note" style="margin:0 0 12px;">🇬🇧🇦🇺🇳🇿 は端末に対応する音声がある場合に再生されます。ない場合は近いアクセントで代用し、その旨を表示します。</div>
+  <div id="listening-area"></div>
+</div>
+
+<!-- ============ PHRASES ============ -->
+<div class="view" id="view-phrases">
+  <button class="back-link" onclick="go('home')">← ホームへ戻る</button>
+  <div class="row" style="margin-bottom:14px;" id="phrase-cats"></div>
+  <div class="note" style="margin:0 0 12px;">カードをタップすると英語が表示されます。🔊 で発音を確認できます。</div>
+  <div id="phrase-list"></div>
+</div>
+
+<!-- ============ TRANSLATE ============ -->
+<div class="view" id="view-translate">
+  <button class="back-link" onclick="go('home')">← ホームへ戻る</button>
+  <div class="card">
+    <div class="section-title">🌐 翻訳ツール</div>
+    <div class="dir-toggle">
+      <button id="dir-ja-en" class="on" onclick="setDir('ja|en', this)">日本語 → 英語</button>
+      <button id="dir-en-ja" onclick="setDir('en|ja', this)">英語 → 日本語</button>
+    </div>
+    <textarea id="tr-input" placeholder="翻訳したい文章を入力してください"></textarea>
+    <div style="margin-top:12px; display:flex; gap:10px;">
+      <button class="btn" style="flex:1;" onclick="doTranslate()">翻訳する</button>
+      <button class="btn ghost" onclick="clearTranslate()">クリア</button>
+    </div>
+    <div class="tr-result" id="tr-output">ここに翻訳結果が表示されます</div>
+    <div class="row copy-btn">
+      <button class="btn ghost small" onclick="copyResult()">📋 コピー</button>
+      <button class="btn ghost small" onclick="speakResult()">🔊 読み上げ</button>
+    </div>
+    <div class="ext-links">
+      <a id="link-deepl" href="https://www.deepl.com/translator" target="_blank" rel="noopener">DeepL で開く ↗</a>
+      <a id="link-google" href="https://translate.google.com/" target="_blank" rel="noopener">Google 翻訳で開く ↗</a>
+    </div>
+    <div class="note">※ 無料の翻訳API (MyMemory) を利用しています。1日あたりの利用量に上限があります。機密情報を含む文章は外部送信されるため入力しないでください(機密文書は writer エージェントの利用を推奨)。重要な文章は DeepL でのダブルチェックがおすすめです。</div>
+  </div>
+</div>
+
+</main>
+
+<nav>
+  <button class="active" data-v="home" onclick="go('home')"><span class="ico">🏠</span>ホーム</button>
+  <button data-v="vocab" onclick="go('vocab')"><span class="ico">📚</span>単語</button>
+  <button data-v="grammar" onclick="go('grammar')"><span class="ico">✏️</span>読解</button>
+  <button data-v="listening" onclick="go('listening')"><span class="ico">🎧</span>聞取</button>
+  <button data-v="phrases" onclick="go('phrases')"><span class="ico">💼</span>表現</button>
+  <button data-v="translate" onclick="go('translate')"><span class="ico">🌐</span>翻訳</button>
+</nav>
+
+<script>
+/* ==================== データ:単語 ==================== */
+const VOCAB = {
+  "600": [
+    { w:"attend", pos:"動詞", m:"出席する", ex:"All staff must <b>attend</b> the meeting.", exj:"全社員がその会議に出席しなければならない。" },
+    { w:"schedule", pos:"動詞/名詞", m:"予定する/予定表", ex:"The interview is <b>scheduled</b> for Monday.", exj:"面接は月曜日に予定されている。" },
+    { w:"invoice", pos:"名詞", m:"請求書", ex:"Please pay the <b>invoice</b> by Friday.", exj:"金曜日までに請求書のお支払いをお願いします。" },
+    { w:"confirm", pos:"動詞", m:"確認する、確定する", ex:"I'd like to <b>confirm</b> my reservation.", exj:"予約を確認したいのですが。" },
+    { w:"available", pos:"形容詞", m:"利用できる、手が空いている", ex:"Ms. Ito is <b>available</b> after 3 p.m.", exj:"伊藤さんは午後3時以降なら空いています。" },
+    { w:"deadline", pos:"名詞", m:"締め切り", ex:"The <b>deadline</b> for the report is tomorrow.", exj:"報告書の締め切りは明日です。" },
+    { w:"conference", pos:"名詞", m:"会議、協議会", ex:"She will speak at the annual <b>conference</b>.", exj:"彼女は年次会議で講演する。" },
+    { w:"department", pos:"名詞", m:"部署", ex:"He works in the sales <b>department</b>.", exj:"彼は営業部で働いている。" },
+    { w:"apply", pos:"動詞", m:"応募する、適用する", ex:"You can <b>apply</b> for the position online.", exj:"その職にはオンラインで応募できます。" },
+    { w:"reply", pos:"動詞/名詞", m:"返信する/返信", ex:"Please <b>reply</b> by the end of the day.", exj:"本日中にご返信ください。" },
+    { w:"receipt", pos:"名詞", m:"領収書、受領", ex:"Keep the <b>receipt</b> for your records.", exj:"記録のため領収書を保管してください。" },
+    { w:"branch", pos:"名詞", m:"支店", ex:"A new <b>branch</b> will open in Osaka.", exj:"大阪に新しい支店が開設される。" },
+    { w:"employee", pos:"名詞", m:"従業員", ex:"The company has 500 <b>employees</b>.", exj:"その会社には500人の従業員がいる。" },
+    { w:"customer", pos:"名詞", m:"顧客", ex:"<b>Customer</b> satisfaction is our priority.", exj:"顧客満足が私たちの最優先事項です。" },
+    { w:"delay", pos:"名詞/動詞", m:"遅延/遅らせる", ex:"The flight was <b>delayed</b> due to weather.", exj:"悪天候のためフライトが遅れた。" },
+    { w:"repair", pos:"動詞/名詞", m:"修理する/修理", ex:"The copier needs to be <b>repaired</b>.", exj:"コピー機は修理が必要だ。" },
+    { w:"order", pos:"動詞/名詞", m:"注文する/注文", ex:"Your <b>order</b> will arrive within two days.", exj:"ご注文の品は2日以内に届きます。" },
+    { w:"contract", pos:"名詞", m:"契約(書)", ex:"Both parties signed the <b>contract</b>.", exj:"両当事者が契約書に署名した。" },
+    { w:"provide", pos:"動詞", m:"提供する", ex:"We <b>provide</b> free delivery service.", exj:"当社は無料配送サービスを提供しています。" },
+    { w:"due", pos:"形容詞", m:"期限が来て、〜のため", ex:"The payment is <b>due</b> on March 31.", exj:"支払期限は3月31日です。" },
+    { w:"attach", pos:"動詞", m:"添付する", ex:"Please find the <b>attached</b> file.", exj:"添付ファイルをご確認ください。" },
+    { w:"announce", pos:"動詞", m:"発表する", ex:"The CEO <b>announced</b> a new policy.", exj:"CEOが新しい方針を発表した。" },
+    { w:"charge", pos:"名詞/動詞", m:"料金/請求する", ex:"There is no extra <b>charge</b> for shipping.", exj:"送料に追加料金はかかりません。" },
+    { w:"equipment", pos:"名詞", m:"機器、設備", ex:"The office <b>equipment</b> was upgraded.", exj:"オフィスの機器が新しくなった。" },
+    { w:"purchase", pos:"動詞/名詞", m:"購入する/購入", ex:"You can <b>purchase</b> tickets at the door.", exj:"チケットは入口で購入できます。" },
+    { w:"refund", pos:"名詞/動詞", m:"返金/返金する", ex:"We offer a full <b>refund</b> within 30 days.", exj:"30日以内なら全額返金いたします。" },
+    { w:"notice", pos:"名詞/動詞", m:"通知/気づく", ex:"The office will close without prior <b>notice</b>.", exj:"オフィスは事前通知なく閉鎖されることがある。" },
+    { w:"training", pos:"名詞", m:"研修", ex:"New hires must complete safety <b>training</b>.", exj:"新入社員は安全研修を修了しなければならない。" },
+    { w:"promotion", pos:"名詞", m:"昇進、販売促進", ex:"She earned a <b>promotion</b> to manager.", exj:"彼女はマネージャーへの昇進を勝ち取った。" },
+    { w:"colleague", pos:"名詞", m:"同僚", ex:"My <b>colleagues</b> helped me finish the project.", exj:"同僚たちがプロジェクトの完了を手伝ってくれた。" },
+  ],
+  "730": [
+    { w:"implement", pos:"動詞", m:"実施する、導入する", ex:"The firm will <b>implement</b> a new HR system.", exj:"その会社は新しい人事システムを導入する。" },
+    { w:"comply with", pos:"動詞句", m:"(規則に)従う", ex:"All vendors must <b>comply with</b> safety codes.", exj:"すべての業者は安全基準に従わなければならない。" },
+    { w:"expenditure", pos:"名詞", m:"支出、経費", ex:"We need to reduce travel <b>expenditures</b>.", exj:"出張経費を削減する必要がある。" },
+    { w:"itinerary", pos:"名詞", m:"旅程(表)", ex:"Your <b>itinerary</b> has been emailed to you.", exj:"旅程表をメールでお送りしました。" },
+    { w:"reimburse", pos:"動詞", m:"払い戻す、経費精算する", ex:"Employees will be <b>reimbursed</b> for travel costs.", exj:"従業員には交通費が払い戻される。" },
+    { w:"negotiate", pos:"動詞", m:"交渉する", ex:"We <b>negotiated</b> a better price with the supplier.", exj:"私たちは仕入先とより良い価格を交渉した。" },
+    { w:"quarterly", pos:"形容詞/副詞", m:"四半期ごとの(に)", ex:"The <b>quarterly</b> report shows strong growth.", exj:"四半期報告書は力強い成長を示している。" },
+    { w:"personnel", pos:"名詞", m:"職員、人事(部)", ex:"Contact <b>Personnel</b> for benefit questions.", exj:"福利厚生については人事部にお問い合わせください。" },
+    { w:"merger", pos:"名詞", m:"合併", ex:"The <b>merger</b> created the industry's largest firm.", exj:"その合併により業界最大の企業が誕生した。" },
+    { w:"revenue", pos:"名詞", m:"収益、売上高", ex:"Annual <b>revenue</b> exceeded expectations.", exj:"年間収益は予想を上回った。" },
+    { w:"expire", pos:"動詞", m:"期限が切れる", ex:"Your warranty <b>expires</b> next month.", exj:"保証は来月で切れます。" },
+    { w:"facilitate", pos:"動詞", m:"促進する、円滑にする", ex:"The new software <b>facilitates</b> team communication.", exj:"新しいソフトはチームの意思疎通を円滑にする。" },
+    { w:"tentative", pos:"形容詞", m:"仮の、暫定的な", ex:"Here is the <b>tentative</b> agenda for Friday.", exj:"こちらが金曜日の暫定的な議題です。" },
+    { w:"outstanding", pos:"形容詞", m:"未払いの、傑出した", ex:"Please settle the <b>outstanding</b> balance.", exj:"未払い残高の精算をお願いします。" },
+    { w:"proximity", pos:"名詞", m:"近いこと、近接", ex:"The hotel's <b>proximity</b> to the station is convenient.", exj:"そのホテルは駅に近くて便利だ。" },
+    { w:"comprehensive", pos:"形容詞", m:"包括的な", ex:"The plan includes <b>comprehensive</b> insurance.", exj:"そのプランには包括的な保険が含まれる。" },
+    { w:"designate", pos:"動詞", m:"指定する、任命する", ex:"Smoking is allowed only in <b>designated</b> areas.", exj:"喫煙は指定された場所でのみ可能です。" },
+    { w:"consecutive", pos:"形容詞", m:"連続した", ex:"Sales rose for five <b>consecutive</b> quarters.", exj:"売上は5四半期連続で伸びた。" },
+    { w:"endorse", pos:"動詞", m:"支持する、裏書きする", ex:"The board <b>endorsed</b> the expansion plan.", exj:"取締役会は拡大計画を支持した。" },
+    { w:"streamline", pos:"動詞", m:"効率化する", ex:"We <b>streamlined</b> the approval process.", exj:"承認プロセスを効率化した。" },
+    { w:"defective", pos:"形容詞", m:"欠陥のある", ex:"<b>Defective</b> items can be exchanged for free.", exj:"欠陥品は無料で交換できます。" },
+    { w:"inventory", pos:"名詞", m:"在庫(調べ)", ex:"The store is closed for <b>inventory</b>.", exj:"店は棚卸しのため閉まっている。" },
+    { w:"subsidiary", pos:"名詞", m:"子会社", ex:"The firm opened a <b>subsidiary</b> in Singapore.", exj:"その会社はシンガポールに子会社を設立した。" },
+    { w:"amend", pos:"動詞", m:"修正する、改正する", ex:"The contract was <b>amended</b> last week.", exj:"契約書は先週修正された。" },
+    { w:"turnout", pos:"名詞", m:"参加者数、投票率", ex:"The seminar had a large <b>turnout</b>.", exj:"セミナーには多くの参加者が集まった。" },
+    { w:"exceed", pos:"動詞", m:"超える", ex:"Demand <b>exceeded</b> supply this quarter.", exj:"今期は需要が供給を上回った。" },
+    { w:"eligible", pos:"形容詞", m:"資格のある", ex:"Full-time staff are <b>eligible</b> for the bonus.", exj:"正社員は賞与の対象となる。" },
+    { w:"acquisition", pos:"名詞", m:"買収、取得", ex:"The <b>acquisition</b> was finalized in June.", exj:"買収は6月に完了した。" },
+    { w:"preliminary", pos:"形容詞", m:"予備の、準備段階の", ex:"<b>Preliminary</b> results look promising.", exj:"予備調査の結果は有望に見える。" },
+    { w:"courteous", pos:"形容詞", m:"礼儀正しい", ex:"Our staff is known for <b>courteous</b> service.", exj:"当社のスタッフは丁寧な接客で知られている。" },
+  ],
+  "860": [
+    { w:"remuneration", pos:"名詞", m:"報酬", ex:"The <b>remuneration</b> package includes stock options.", exj:"報酬パッケージにはストックオプションが含まれる。" },
+    { w:"discrepancy", pos:"名詞", m:"不一致、食い違い", ex:"We found a <b>discrepancy</b> in the accounts.", exj:"会計に不一致が見つかった。" },
+    { w:"stipulate", pos:"動詞", m:"(契約で)規定する", ex:"The contract <b>stipulates</b> a 30-day notice period.", exj:"契約は30日前の通知期間を規定している。" },
+    { w:"unprecedented", pos:"形容詞", m:"前例のない", ex:"The company saw <b>unprecedented</b> growth.", exj:"その会社は前例のない成長を遂げた。" },
+    { w:"deteriorate", pos:"動詞", m:"悪化する", ex:"Relations between the firms <b>deteriorated</b>.", exj:"両社の関係は悪化した。" },
+    { w:"solicit", pos:"動詞", m:"求める、懇願する", ex:"We <b>solicit</b> feedback from all clients.", exj:"すべての顧客からご意見を募っています。" },
+    { w:"contingent", pos:"形容詞", m:"〜次第の、偶発的な", ex:"The offer is <b>contingent</b> on board approval.", exj:"その提案は取締役会の承認を条件とする。" },
+    { w:"proprietary", pos:"形容詞", m:"専有の、独自の", ex:"The software uses <b>proprietary</b> technology.", exj:"そのソフトは独自技術を使用している。" },
+    { w:"incur", pos:"動詞", m:"(費用・損失を)被る", ex:"Late payments <b>incur</b> additional fees.", exj:"支払いの遅延には追加料金が発生する。" },
+    { w:"adjourn", pos:"動詞", m:"(会議を)休会にする", ex:"The meeting was <b>adjourned</b> until Thursday.", exj:"会議は木曜日まで延期された。" },
+    { w:"waive", pos:"動詞", m:"(権利・料金を)放棄する、免除する", ex:"The bank <b>waived</b> the transfer fee.", exj:"銀行は振込手数料を免除した。" },
+    { w:"attrition", pos:"名詞", m:"自然減、離職", ex:"Staff <b>attrition</b> remains a challenge.", exj:"社員の離職は依然として課題である。" },
+    { w:"exemplary", pos:"形容詞", m:"模範的な", ex:"She received an award for <b>exemplary</b> service.", exj:"彼女は模範的な業務で表彰された。" },
+    { w:"lucrative", pos:"形容詞", m:"利益の大きい", ex:"They signed a <b>lucrative</b> deal with a retailer.", exj:"彼らは小売業者と有利な契約を結んだ。" },
+    { w:"impede", pos:"動詞", m:"妨げる", ex:"Poor logistics <b>impeded</b> the product launch.", exj:"物流の不備が製品発売の妨げとなった。" },
+    { w:"meticulous", pos:"形容詞", m:"細心の、几帳面な", ex:"She is <b>meticulous</b> about record keeping.", exj:"彼女は記録管理に細心の注意を払う。" },
+    { w:"repercussion", pos:"名詞", m:"(悪い)影響、余波", ex:"The recall had serious <b>repercussions</b>.", exj:"リコールは深刻な影響を及ぼした。" },
+    { w:"substantiate", pos:"動詞", m:"立証する", ex:"Please <b>substantiate</b> your expense claims.", exj:"経費請求の裏付け資料を提出してください。" },
+    { w:"amicable", pos:"形容詞", m:"友好的な", ex:"The dispute was settled in an <b>amicable</b> manner.", exj:"紛争は友好的に解決された。" },
+    { w:"curtail", pos:"動詞", m:"削減する、切り詰める", ex:"The firm <b>curtailed</b> its marketing budget.", exj:"その会社はマーケティング予算を削減した。" },
+    { w:"pertinent", pos:"形容詞", m:"関連のある、適切な", ex:"Include all <b>pertinent</b> documents.", exj:"関連するすべての書類を含めてください。" },
+    { w:"arrears", pos:"名詞", m:"滞納金、未払い", ex:"The tenant is three months in <b>arrears</b>.", exj:"その入居者は3か月分滞納している。" },
+    { w:"convene", pos:"動詞", m:"(会議を)招集する", ex:"The committee will <b>convene</b> at 9 a.m.", exj:"委員会は午前9時に招集される。" },
+    { w:"rescind", pos:"動詞", m:"(契約などを)取り消す", ex:"The offer was <b>rescinded</b> without explanation.", exj:"その申し出は説明なく撤回された。" },
+    { w:"synergy", pos:"名詞", m:"相乗効果", ex:"The merger is expected to create <b>synergy</b>.", exj:"合併は相乗効果を生むと期待されている。" },
+    { w:"volatile", pos:"形容詞", m:"不安定な、変動しやすい", ex:"Prices remain <b>volatile</b> this year.", exj:"今年は価格が不安定なままだ。" },
+    { w:"prerequisite", pos:"名詞", m:"前提条件", ex:"Experience is a <b>prerequisite</b> for this role.", exj:"この職務には経験が前提条件となる。" },
+    { w:"delegate", pos:"動詞/名詞", m:"委任する/代表者", ex:"Learn to <b>delegate</b> tasks effectively.", exj:"効果的に仕事を任せることを学びなさい。" },
+    { w:"overhaul", pos:"動詞/名詞", m:"全面的に見直す/総点検", ex:"The website needs a complete <b>overhaul</b>.", exj:"ウェブサイトは全面的な見直しが必要だ。" },
+    { w:"foreseeable", pos:"形容詞", m:"予見できる", ex:"No changes are planned for the <b>foreseeable</b> future.", exj:"当面、変更の予定はない。" },
+  ]
+};
+
+/* ==================== データ:Part 5 ==================== */
+const GRAMMAR = [
+  { q:"All employees are required to submit their expense reports ___ the end of each month.", c:["by","until","on","in"], a:0, ep:"「〜までに(期限)」は by。until は「〜まで(継続)」なので提出の期限には使えません。", tr:"全従業員は毎月末までに経費報告書を提出することが求められています。" },
+  { q:"The marketing team proposed a ___ strategy to attract younger customers.", c:["comprehend","comprehensive","comprehensively","comprehension"], a:1, ep:"名詞 strategy を修飾するのは形容詞 comprehensive(包括的な)。品詞問題は空所の前後を見て即断しましょう。", tr:"マーケティングチームは若い顧客を引きつけるための包括的な戦略を提案した。" },
+  { q:"Ms. Chen will be out of the office ___ Thursday, attending a trade show in Berlin.", c:["since","during","until","among"], a:2, ep:"「木曜日まで不在(状態の継続)」なので until。since は起点、during は期間名詞とともに使います。", tr:"チェンさんは木曜日まで不在で、ベルリンの見本市に参加しています。" },
+  { q:"___ the heavy rain, the outdoor event was held as scheduled.", c:["Despite","Although","Because","However"], a:0, ep:"空所の後ろが名詞句 (the heavy rain) なので前置詞 Despite。Although は接続詞で後ろに S+V が必要です。", tr:"大雨にもかかわらず、屋外イベントは予定通り開催された。" },
+  { q:"The new software allows users ___ documents from any device.", c:["access","accessed","to access","accessing"], a:2, ep:"allow + 人 + to do の形。enable / permit / require も同じ型を取ります。", tr:"新しいソフトウェアにより、ユーザーはどの端末からでも文書にアクセスできる。" },
+  { q:"Applications received after the deadline ___ be considered.", c:["will not","not will","do not","are not"], a:0, ep:"助動詞 will の否定は will not。未来の受動態 will not be considered の形です。", tr:"締め切り後に受領された応募書類は考慮されません。" },
+  { q:"Employees who wish to attend the seminar should register ___ advance.", c:["in","at","on","by"], a:0, ep:"in advance「事前に」は頻出の熟語。丸ごと覚えましょう。", tr:"セミナーへの参加を希望する従業員は事前に登録してください。" },
+  { q:"The quarterly sales figures were ___ higher than analysts had predicted.", c:["significant","significantly","significance","signify"], a:1, ep:"形容詞 higher を修飾するのは副詞 significantly。「比較級を強める副詞」は頻出パターンです。", tr:"四半期の売上高はアナリストの予測よりも大幅に高かった。" },
+  { q:"Please review the attached contract and return a signed copy ___ October 15.", c:["no later than","as soon","in time","at least"], a:0, ep:"no later than 〜「〜までに(遅くとも)」。ビジネスメール頻出表現です。", tr:"添付の契約書をご確認のうえ、10月15日までに署名済みの写しをご返送ください。" },
+  { q:"___ of the two candidates has the required certification.", c:["Neither","Both","All","Every"], a:0, ep:"動詞が has(単数)なので単数扱いの Neither。Both なら have になります。", tr:"2人の候補者のどちらも必要な資格を持っていない。" },
+  { q:"The CEO announced that the company ___ a new production facility in Vietnam next year.", c:["opens","will open","opened","has opened"], a:1, ep:"next year があるので未来表現 will open。時制問題は文中の時のキーワードを探しましょう。", tr:"CEOは、会社が来年ベトナムに新しい生産施設を開設すると発表した。" },
+  { q:"All visitors must wear identification badges ___ on company premises.", c:["while","during","when they","despite"], a:0, ep:"while (they are) on... の「接続詞+分詞構文/省略」。while は主語+be動詞を省略できます。", tr:"すべての訪問者は社内にいる間、IDバッジを着用しなければならない。" },
+  { q:"The hotel offers a complimentary shuttle service for guests ___ at the airport.", c:["arrive","arriving","arrived","arrival"], a:1, ep:"guests を後ろから修飾する現在分詞 arriving(到着する側なので能動)。", tr:"ホテルは空港に到着する宿泊客のために無料シャトルサービスを提供している。" },
+  { q:"___ completing the online form, you will receive a confirmation email.", c:["Upon","While","Until","Unless"], a:0, ep:"Upon -ing「〜するとすぐに」。On -ing も同じ意味です。", tr:"オンラインフォームの入力が完了するとすぐに、確認メールが届きます。" },
+  { q:"The finance director asked that the budget proposal ___ by Friday.", c:["is submitted","be submitted","submits","submitted"], a:1, ep:"ask/request/suggest that S (should) do — 仮定法現在で動詞は原形。be submitted が正解。", tr:"財務部長は予算案を金曜日までに提出するよう求めた。" },
+  { q:"Sales representatives are evaluated ___ their quarterly performance.", c:["based on","basis","basing","base"], a:0, ep:"based on 〜「〜に基づいて」。be evaluated based on で「〜に基づいて評価される」。", tr:"営業担当者は四半期の実績に基づいて評価される。" },
+  { q:"___ receives the highest customer rating will win the service award.", c:["Whoever","Whom","Which","Those"], a:0, ep:"Whoever = anyone who「〜する人は誰でも」。名詞節を作り主語になれます。", tr:"最も高い顧客評価を受けた人が、サービス賞を獲得します。" },
+  { q:"The seminar was so ___ that many attendees requested a follow-up session.", c:["inform","informative","information","informed"], a:1, ep:"so + 形容詞 + that 構文。「有益な」という意味の形容詞 informative が入ります。", tr:"セミナーはとても有益だったので、多くの参加者がフォローアップ講座を希望した。" },
+  { q:"Mr. Park has worked at the Seoul office ___ he joined the company in 2019.", c:["for","since","during","from"], a:1, ep:"現在完了 + since + 過去の時点。「2019年に入社して以来」。for なら期間 (for five years) が続きます。", tr:"パクさんは2019年に入社して以来、ソウルオフィスで働いている。" },
+  { q:"To reduce costs, the company decided to ___ its two regional warehouses.", c:["consolidate","consolidation","consolidated","consolidating"], a:0, ep:"decided to の後は動詞の原形。consolidate「統合する」は860点レベルの頻出語です。", tr:"コスト削減のため、会社は2つの地域倉庫を統合することを決定した。" },
+  { q:"The training session has been postponed ___ further notice.", c:["until","by","for","to"], a:0, ep:"until further notice「追って通知があるまで」。掲示・アナウンス頻出の定型表現。", tr:"研修は追って通知があるまで延期されました。" },
+  { q:"___ employees who completed the survey will be entered into a prize drawing.", c:["Those","This","Them","Their"], a:0, ep:"Those who 〜「〜する人々」。Those employees who と名詞を挟む形も頻出です。", tr:"アンケートに回答した従業員は抽選の対象になります。" },
+  { q:"The proposal must be approved by the board ___ it can be implemented.", c:["before","that","despite","during"], a:0, ep:"「実施される前に承認が必要」。接続詞 before が文意に合います。", tr:"その提案は、実施される前に取締役会の承認を得なければならない。" },
+  { q:"Ticket holders are advised to arrive early, ___ seating is limited.", c:["as","so","despite","whether"], a:0, ep:"as「〜なので(理由)」。because より少し硬い書き言葉で TOEIC 頻出。", tr:"座席数に限りがあるため、チケットをお持ちの方は早めのご来場をお勧めします。" },
+  { q:"The device comes with a two-year warranty and is ___ compatible with all major operating systems.", c:["full","fully","fill","fuller"], a:1, ep:"形容詞 compatible を修飾する副詞 fully。fully compatible「完全に互換性がある」。", tr:"この機器には2年間の保証が付き、すべての主要OSと完全に互換性があります。" },
+  { q:"___ for the position should submit a résumé and two references.", c:["Applicants","Applications","Applies","Applying"], a:0, ep:"動詞 should submit の主語になれる「人」の名詞 Applicants(応募者)。Applications(応募書類)は submit する側になれません。", tr:"その職への応募者は履歴書と推薦者2名の情報を提出してください。" },
+  { q:"Ms. Rivera reviewed the report ___ before sending it to the client.", c:["care","careful","carefully","carefulness"], a:2, ep:"動詞 reviewed を修飾する副詞 carefully。動詞を修飾するのは副詞、が品詞問題の基本です。", tr:"リベラさんは顧客に送る前に報告書を注意深く見直した。" },
+  { q:"Due to budget constraints, the project has been put ___ hold indefinitely.", c:["on","in","at","for"], a:0, ep:"put on hold「保留にする」。電話の保留にも使う頻出イディオムです。", tr:"予算上の制約により、プロジェクトは無期限に保留となった。" },
+  { q:"Had the shipment arrived on time, we ___ the deadline.", c:["met","would have met","will meet","meet"], a:1, ep:"Had S done = If S had done の倒置(仮定法過去完了)。帰結節は would have + 過去分詞。", tr:"もし荷物が時間通りに届いていたら、締め切りに間に合っていただろう。" },
+  { q:"The company's new headquarters is conveniently ___ near the central station.", c:["located","location","locates","locating"], a:0, ep:"be located「位置している」。conveniently located near 〜 は不動産・オフィス紹介の定番表現。", tr:"会社の新本社は中央駅の近くという便利な場所にある。" },
+];
+
+/* ==================== データ:Part 6 (長文穴埋め) ==================== */
+const PART6 = [
+  { type:"Eメール", min:2,
+    text:`Dear Ms. Alvarez,
+
+Thank you for your order of May 2. Unfortunately, the desk lamps you requested are temporarily out of stock ___1___ unexpectedly high demand. We expect to ___2___ a new shipment within ten business days, and your order will be shipped the same day it arrives. As an apology for the ___3___, we have upgraded your delivery to express shipping at no extra cost. ___4___ We appreciate your patience and continued business.
+
+Sincerely,
+Trent Howard
+Customer Service, Lumina Home`,
+    qs:[
+      { c:["due to","because","owing","despite"], a:0, ep:"空所の後ろは名詞句 (unexpectedly high demand) なので前置詞 due to。because は接続詞で S+V が必要。owing は owing to の形なら可。despite「〜にもかかわらず」は文意が合いません。" },
+      { c:["receive","arrive","deliver","inform"], a:0, ep:"shipment(入荷品)を「受け取る」receive。arrive は自動詞なので目的語 (a new shipment) を取れません。" },
+      { c:["inconvenience","convenience","inconvenient","inconveniently"], a:0, ep:"前置詞 for + the の後ろなので名詞。在庫切れへのお詫びなので「ご不便」inconvenience が正解。" },
+      { q:"空所 (4) に入る一文を選んでください", c:["A tracking number will be emailed to you once the item is dispatched.","We regret to inform you that your order has been canceled.","Our new store will open early next month.","Express shipping is unfortunately no longer available."], a:0, ep:"直前で「速達配送に変更した」と述べているので、発送後の追跡番号の案内が自然な流れ。キャンセルや「速達は利用不可」は文脈と矛盾します。文挿入問題は前後の文との整合性で判断しましょう。" },
+    ],
+    tr:"アルバレス様 5月2日のご注文ありがとうございます。あいにくご注文のデスクランプは、予想を上回る需要のため一時的に在庫切れとなっております。10営業日以内に新たな入荷を受け取る見込みで、入荷当日にご注文品を発送いたします。ご不便へのお詫びとして、追加料金なしで速達配送にアップグレードいたしました。商品の発送後、追跡番号をメールでお送りします。ご辛抱と変わらぬお引き立てに感謝申し上げます。 カスタマーサービス トレント・ハワード" },
+  { type:"社内連絡", min:2,
+    text:`To: All Staff
+From: Facilities Management
+Re: Lobby Renovation
+
+Beginning Monday, August 4, the main lobby will be closed for renovation. The project is expected to ___1___ approximately three weeks. During this period, please use the east entrance, ___2___ is located next to the parking garage. Deliveries will be accepted at the loading dock ___3___ usual. ___4___ We apologize for any inconvenience and thank you for your cooperation.`,
+    qs:[
+      { c:["last","spend","extend","prolong"], a:0, ep:"「(工事が)約3週間続く」— 期間を続ける自動詞 last。spend は人が主語、extend / prolong は他動詞「延長する」なので不適。" },
+      { c:["which","where","who","what"], a:0, ep:"先行詞 the east entrance(物)を受ける非制限用法(コンマつき)の関係代名詞 which。場所でも「入口が位置する」と主語の働きをするので where は不可。" },
+      { c:["as","so","than","like"], a:0, ep:"as usual「通常どおり」。TOEIC 頻出の定型表現として丸ごと覚えましょう。" },
+      { q:"空所 (4) に入る一文を選んでください", c:["Signs will be posted to direct visitors to the temporary entrance.","The parking garage will be demolished next year.","All staff must work from home during this period.","The renovation has been postponed indefinitely."], a:0, ep:"直前の「東口を使ってください」という指示を補足する、案内標識の一文が自然。「延期された」は冒頭の日程と矛盾します。" },
+    ],
+    tr:"全社員へ / 施設管理部より / 件名: ロビー改装 8月4日(月)より、メインロビーは改装のため閉鎖されます。工事は約3週間続く見込みです。この期間中は、駐車場棟の隣にある東口をご利用ください。配達物は通常どおり搬入口で受け付けます。来訪者を臨時入口へ案内する標識が設置されます。ご不便をおかけしますが、ご協力に感謝いたします。" },
+  { type:"お知らせ", min:2,
+    text:`We are pleased to announce a new professional development program for all employees. Starting in October, monthly workshops will be offered on topics ___1___ from data analysis to public speaking. Participation is voluntary, but employees who complete six or more sessions will receive a certificate ___2___ by the Human Resources Department. ___3___, each session will be recorded for those unable to attend in person. Space is limited, so we encourage you to register ___4___.`,
+    qs:[
+      { c:["ranging","ranged","ranges","range"], a:0, ep:"topics ranging from A to B「AからBに及ぶテーマ」。名詞 topics を後ろから修飾する現在分詞(能動)。" },
+      { c:["issued","issuing","issue","issues"], a:0, ep:"a certificate (which is) issued by 〜「人事部によって発行される修了証」。受け身の関係なので過去分詞 issued。" },
+      { c:["In addition","Therefore","However","Similarly"], a:0, ep:"修了証の話に「録画も提供される」という情報を追加しているので In addition(さらに)。逆接や因果関係ではありません。" },
+      { c:["promptly","prompt","prompted","promptness"], a:0, ep:"動詞 register を修飾するのは副詞 promptly「速やかに」。動詞を修飾するのは副詞、が鉄則です。" },
+    ],
+    tr:"全従業員向けの新しい能力開発プログラムの開始をお知らせします。10月より、データ分析からパブリックスピーキングまで幅広いテーマの月例ワークショップを開催します。参加は任意ですが、6回以上のセッションを修了した従業員には人事部発行の修了証が授与されます。さらに、対面で参加できない方のために各回は録画されます。定員に限りがありますので、お早めのご登録をお勧めします。" },
+];
+
+/* ==================== データ:Part 7 (読解) ==================== */
+const PART7 = [
+  { type:"Eメール", min:3,
+    text:`From: Keiko Yamada <kyamada@brixton-consulting.com>
+To: All Project Members
+Subject: Client presentation — schedule change
+Date: Tuesday, 10 June
+
+Hi everyone,
+
+The presentation for Nordica Foods, originally planned for this Thursday, has been moved to Monday, 16 June, at 2 p.m. because their marketing director will be abroad until the weekend. This actually works in our favor — we now have extra time to refine the market data in section three, which several of you felt was too thin.
+
+Daniel, could you update the sales charts with the May figures by Friday? Also, everyone should send me any final comments on the slides by noon on Saturday. I will consolidate all changes on Sunday and send out the final version that evening.
+
+Thanks,
+Keiko`,
+    qs:[
+      { q:"Why was the presentation rescheduled?", c:["A client representative will be overseas","The market data was lost","The meeting room was unavailable","Ms. Yamada will be on vacation"], a:0, ep:"第1段落の because their marketing director will be abroad が根拠。本文の abroad が選択肢では overseas に言い換えられています。Part 7 はこの「言い換え」に気づけるかが最大のポイントです。" },
+      { q:"What is Daniel asked to do?", c:["Update charts with recent figures","Send the final slides to the client","Rewrite section three","Book a meeting room"], a:0, ep:"第2段落の could you update the sales charts with the May figures が根拠。the May figures → recent figures の言い換えです。" },
+      { q:"When will the final version of the slides be sent?", c:["On Sunday evening","On Friday","On Saturday at noon","On Monday at 2 p.m."], a:0, ep:"最終文 I will consolidate all changes on Sunday and send out the final version that evening。that evening = Sunday evening。指示語が何を指すかを正確に追いましょう。" },
+    ],
+    tr:"差出人: 山田恵子 / 宛先: プロジェクトメンバー各位 / 件名: クライアント向けプレゼンの日程変更 — 皆さん、今週木曜に予定していたノルディカ・フーズ向けプレゼンは、先方のマーケティング責任者が週末まで海外にいるため、6月16日(月)午後2時に変更になりました。これはむしろ好都合です。何人かが「内容が薄い」と感じていた第3章の市場データを磨く時間ができました。ダニエルさん、金曜までに売上グラフを5月の数字に更新してもらえますか?また全員、土曜の正午までにスライドへの最終コメントを送ってください。日曜にすべての修正を反映し、その日の夜に最終版を送付します。恵子" },
+  { type:"お知らせ", min:2,
+    text:`NOTICE TO ALL RESIDENTS OF PARKVIEW TOWER
+
+Annual fire alarm inspection — Wednesday, 23 July, 9:00 a.m.–4:00 p.m.
+
+Technicians from SafeGuard Systems will need access to every apartment to test the alarm units. If you will not be at home, you may leave your key with the building manager's office by Tuesday evening; keys will be returned the same day. Apartments that cannot be entered on 23 July must arrange a follow-up visit at the resident's own expense ($40).
+
+The alarms will sound briefly during testing. Pets that are sensitive to noise should be moved to a friend's home or a day-care facility if possible.
+
+Building Management`,
+    qs:[
+      { q:"What are residents asked to do if they will be absent on July 23?", c:["Leave a key with the manager's office","Pay $40 in advance","Call SafeGuard Systems","Reschedule the inspection online"], a:0, ep:"第2段落 If you will not be at home, you may leave your key with the building manager's office が根拠。条件(不在の場合)と行動を正しく結びつけましょう。" },
+      { q:"What is indicated about a follow-up visit?", c:["Residents must pay for it","It is free of charge","It will take place the same day","It does not require access to the apartment"], a:0, ep:"at the resident's own expense ($40)「居住者の自己負担で」が根拠。own expense → must pay for it の言い換えです。" },
+    ],
+    tr:"パークビュータワー居住者の皆様へ — 年次火災報知器点検:7月23日(水)9:00〜16:00。セーフガード・システムズの技術者が警報装置の点検のため全戸に立ち入ります。ご不在の場合は、火曜の夜までに管理人室へ鍵をお預けください。鍵は当日中に返却されます。23日に入室できなかった住戸は、居住者の自己負担(40ドル)で再訪問を手配していただく必要があります。点検中は警報が短時間鳴ります。音に敏感なペットは、可能であれば友人宅やペット預かり施設へ移動させてください。 建物管理者" },
+  { type:"チャット", min:2,
+    text:`Mark Ellis [10:09]
+Hi Priya, are you at the office? The projector in Room 4 isn't connecting to my laptop again.
+
+Priya Nair [10:11]
+Not yet — on the train. Did you try the HDMI cable in the cabinet? The wireless link has been unstable all week.
+
+Mark Ellis [10:12]
+Just did. Still nothing. My client demo starts at 10:30.
+
+Priya Nair [10:14]
+Leave it with me.
+
+Priya Nair [10:15]
+I'll call IT and have them bring a spare projector up. Should be there in ten minutes.
+
+Mark Ellis [10:16]
+You're a lifesaver. I'll set up the handouts in the meantime.`,
+    qs:[
+      { q:"At 10:14, what does Ms. Nair most likely mean when she writes, \"Leave it with me\"?", c:["She will take care of the problem","Mr. Ellis should leave the projector in Room 4","She wants to borrow the HDMI cable","Mr. Ellis should postpone the demonstration"], a:0, ep:"直後の発言「ITに電話して予備のプロジェクターを持って行かせる」が根拠。「私に任せて=問題を引き受ける」という意味です。意図問題は文字通りの意味ではなく、前後の流れで判断しましょう。" },
+      { q:"What will Mr. Ellis most likely do next?", c:["Prepare printed materials","Call the IT department","Take a train to the office","Cancel his demonstration"], a:0, ep:"最後の発言 I'll set up the handouts が根拠。handouts(配布資料)→ printed materials の言い換えです。" },
+    ],
+    tr:"マーク・エリス [10:09] プリヤ、オフィスにいる?第4会議室のプロジェクターがまたノートPCにつながらないんだ。/ プリヤ・ナイール [10:11] まだよ、電車の中。キャビネットのHDMIケーブルは試した?無線接続は今週ずっと不安定なの。/ マーク [10:12] 今試したけどダメ。10時30分からクライアントのデモなんだ。/ プリヤ [10:14] 私に任せて。/ プリヤ [10:15] ITに電話して予備のプロジェクターを持って行ってもらう。10分くらいで着くはず。/ マーク [10:16] 命の恩人だよ。その間に配布資料の準備をしておく。" },
+  { type:"記事", min:3,
+    text:`LOCAL BUSINESS ROUNDUP
+
+HARTWELL — Coffee chain Bean & Barrel announced on Monday that it will open its first drive-through location on Route 9 this autumn, creating about 25 jobs. The company, founded in Hartwell twelve years ago, now operates 40 stores across the region, but this will be the first designed primarily for commuters.
+
+"Morning traffic on Route 9 has doubled since the technology park opened," said CEO Marta Villanueva. "We want to serve customers who don't have time to park and come inside." The new store will also test a mobile pre-ordering system, which, if successful, will be introduced at all other locations next year.`,
+    qs:[
+      { q:"What is suggested about Bean & Barrel?", c:["It was established twelve years ago","It operates mainly outside the region","Its headquarters is in the technology park","It already runs several drive-throughs"], a:0, ep:"founded in Hartwell twelve years ago が根拠。founded → established の言い換え。「初のドライブスルー」なので (D) は本文と矛盾します。" },
+      { q:"According to Ms. Villanueva, why was the new location chosen?", c:["Commuter traffic has increased nearby","Rent on Route 9 is inexpensive","A competitor closed its store there","Customers requested more seating"], a:0, ep:"CEO の発言 Morning traffic on Route 9 has doubled が根拠。traffic has doubled → traffic has increased の言い換えです。" },
+      { q:"What will happen if the pre-ordering system is successful?", c:["It will be expanded to all stores","The Route 9 store will hire more staff","Parking spaces will be added","Prices will be reduced"], a:0, ep:"最終文 if successful, will be introduced at all other locations next year が根拠。introduced at all other locations → expanded to all stores の言い換え。" },
+    ],
+    tr:"地元ビジネス短信 — ハートウェル発:コーヒーチェーンのビーン&バレルは月曜、今秋ルート9沿いに同社初のドライブスルー店舗を開設し、約25人の雇用を創出すると発表した。同社は12年前にハートウェルで創業し、現在は地域全体で40店舗を展開するが、通勤客を主対象とする店舗は今回が初めて。「テクノロジーパークの開業以来、ルート9の朝の交通量は倍増しました」とマルタ・ビジャヌエバCEOは語る。「駐車して店内に入る時間のないお客様に対応したいのです」。新店舗ではモバイル事前注文システムも試験導入され、成功すれば来年、他の全店舗に導入される予定だ。" },
+];
+
+/* ==================== データ:リスニング ==================== */
+const LISTENING = [
+  { audio:"Good morning, everyone. Before we begin today's meeting, please note that the quarterly review has been moved from Thursday to Friday at ten a.m. in Conference Room B.",
+    q:"When will the quarterly review take place?", c:["Thursday at 10 a.m.","Friday at 10 a.m.","Friday at 2 p.m.","Thursday at 2 p.m."], a:1,
+    script:"おはようございます、皆さん。本日の会議を始める前にお知らせです。四半期レビューは木曜日から金曜日の午前10時、会議室Bに変更されました。" },
+  { audio:"Thank you for calling Horizon Travel. Our office is currently closed. Business hours are Monday through Friday, nine a.m. to six p.m. For urgent matters, please press one to reach our emergency line.",
+    q:"What should callers do for urgent matters?", c:["Call back on Monday","Leave a voicemail","Press one","Send an email"], a:2,
+    script:"ホライズン・トラベルにお電話ありがとうございます。ただいま営業時間外です。営業時間は月曜から金曜、午前9時から午後6時です。お急ぎの場合は1を押して緊急窓口におつなぎください。" },
+  { audio:"Attention, passengers on Flight 208 to Singapore. Due to a mechanical issue, boarding will be delayed by approximately forty minutes. We apologize for the inconvenience.",
+    q:"Why is the flight delayed?", c:["Bad weather","A mechanical issue","Heavy traffic","A crew shortage"], a:1,
+    script:"シンガポール行き208便をご利用のお客様にお知らせします。機材の不具合により、ご搭乗は約40分遅れる見込みです。ご不便をおかけして申し訳ございません。" },
+  { audio:"Hi, this is Elena from Accounting. I'm calling about the invoice you submitted last week. The total doesn't match the purchase order, so could you double-check the figures and get back to me by tomorrow?",
+    q:"What does Elena ask the listener to do?", c:["Submit a new purchase order","Verify the numbers","Pay the invoice","Call the supplier"], a:1,
+    script:"もしもし、経理のエレナです。先週ご提出いただいた請求書の件でお電話しました。合計金額が発注書と一致していないので、数字を再確認して明日までにご連絡いただけますか?" },
+  { audio:"Welcome to the Riverside Art Museum. The special photography exhibition is on the third floor. Please note that flash photography is not permitted inside the galleries. Guided tours begin every hour at the main entrance.",
+    q:"What is NOT allowed in the galleries?", c:["Guided tours","Flash photography","Sketching","Talking"], a:1,
+    script:"リバーサイド美術館へようこそ。写真特別展は3階です。館内でのフラッシュ撮影はご遠慮ください。ガイドツアーは毎正時に正面入口から出発します。" },
+  { audio:"Hello, Mr. Tanaka. This is Sarah from Dr. Miller's office, confirming your appointment for Tuesday, March fourth, at three thirty. If you need to reschedule, please call us at least twenty-four hours in advance.",
+    q:"What is the purpose of the call?", c:["To cancel an appointment","To confirm an appointment","To request a payment","To announce a new doctor"], a:1,
+    script:"もしもし、田中様。ミラー医院のサラです。3月4日火曜日、午後3時30分のご予約の確認でお電話しました。変更が必要な場合は、少なくとも24時間前までにお電話ください。" },
+  { audio:"Our store's annual clearance sale starts this Saturday. All winter items will be marked down by up to sixty percent. Members of our loyalty program receive an additional ten percent off.",
+    q:"Who receives an extra discount?", c:["First-time customers","Loyalty program members","Online shoppers","Early visitors"], a:1,
+    script:"当店の年次クリアランスセールが今週土曜日に始まります。冬物商品はすべて最大60%引きです。ロイヤルティプログラムの会員はさらに10%引きになります。" },
+  { audio:"Team, quick update on the Hansen project. The client approved our design yesterday, but they've asked us to move the launch date up by two weeks. That means all materials must be finalized by the end of this month.",
+    q:"What has changed about the project?", c:["The budget was reduced","The launch was moved earlier","The design was rejected","The client canceled it"], a:1,
+    script:"チームの皆さん、ハンセン案件の最新情報です。昨日クライアントがデザインを承認しましたが、発売日を2週間前倒ししたいとのことです。つまり、すべての資料を今月末までに完成させる必要があります。" },
+  { audio:"This is an announcement for all building tenants. The main elevator will be out of service for maintenance this Wednesday from nine a.m. to noon. Please use the stairs or the freight elevator at the rear of the building during this time.",
+    q:"How long will the elevator maintenance last?", c:["All day Wednesday","Three hours","Nine hours","Two days"], a:1,
+    script:"ビルのテナントの皆様にお知らせします。今週水曜日の午前9時から正午まで、メインエレベーターは保守点検のため運転を休止します。この間は階段またはビル裏手の貨物用エレベーターをご利用ください。" },
+  { audio:"Hi, I'm calling from Brightline Office Supplies. The ergonomic chairs you ordered are back in stock, but the standing desks won't arrive until next month. Would you like us to ship the chairs first, or send everything together?",
+    q:"What does the caller want to know?", c:["Whether to ship items separately","The delivery address","The payment method","The order quantity"], a:0,
+    script:"もしもし、ブライトライン事務用品です。ご注文のエルゴノミクスチェアは再入荷しましたが、スタンディングデスクの入荷は来月になります。椅子を先に発送しましょうか、それとも全部まとめてお送りしましょうか?" },
+  { audio:"Before we wrap up, let me remind everyone that the office will be closed next Monday for the national holiday. Also, starting next quarter, all expense reports must be submitted through the new online system, not by email.",
+    q:"How should expense reports be submitted starting next quarter?", c:["By email","Through the online system","In person","By fax"], a:1,
+    script:"終わる前にお知らせです。来週月曜日は祝日のためオフィスは休業です。また、来四半期からすべての経費報告書はメールではなく新しいオンラインシステムで提出してください。" },
+  { audio:"Ladies and gentlemen, thank you for attending today's workshop on effective negotiation. Handouts summarizing the key strategies are available at the back of the room. A recording of this session will be posted on the company intranet by Friday.",
+    q:"What will be available on the intranet?", c:["The handouts","A recording of the workshop","A list of attendees","The next schedule"], a:1,
+    script:"皆様、本日の効果的な交渉術ワークショップにご参加いただきありがとうございます。主要な戦略をまとめた資料は会場後方にございます。本セッションの録画は金曜日までに社内イントラネットに掲載されます。" },
+];
+
+/* ==================== データ:ビジネスフレーズ ==================== */
+const PHRASES = [
+  { cat:"会議", jp:"本日はお集まりいただきありがとうございます。早速始めましょう。", en:"Thank you all for coming today. Let's get started." },
+  { cat:"会議", jp:"今日の議題は3つあります。", en:"We have three items on today's agenda." },
+  { cat:"会議", jp:"その点について、もう少し詳しく説明していただけますか?", en:"Could you elaborate on that point a little more?" },
+  { cat:"会議", jp:"おっしゃることは分かりますが、別の見方もあると思います。", en:"I see your point, but I think there's another way to look at it." },
+  { cat:"会議", jp:"一度持ち帰って検討させてください。", en:"Let me take this back and discuss it with my team." },
+  { cat:"会議", jp:"時間の関係で、次の議題に移りましょう。", en:"In the interest of time, let's move on to the next item." },
+  { cat:"会議", jp:"ここまでの内容をまとめると、次の通りです。", en:"To summarize what we've discussed so far, here are the key points." },
+  { cat:"会議", jp:"決定事項と担当者を確認して終わりにしましょう。", en:"Let's confirm the action items and owners before we wrap up." },
+  { cat:"メール", jp:"お世話になっております。", en:"I hope this email finds you well." },
+  { cat:"メール", jp:"〜の件でご連絡いたしました。", en:"I'm writing to you regarding ..." },
+  { cat:"メール", jp:"添付ファイルをご確認ください。", en:"Please find the attached file for your review." },
+  { cat:"メール", jp:"ご多忙のところ恐れ入りますが、金曜日までにご返信いただけますと幸いです。", en:"I understand you're busy, but I would appreciate your reply by Friday." },
+  { cat:"メール", jp:"確認が遅くなり申し訳ございません。", en:"I apologize for the delayed response." },
+  { cat:"メール", jp:"念のため、前回のメールを再送いたします。", en:"Just in case, I'm resending my previous email." },
+  { cat:"メール", jp:"ご不明な点がございましたら、お気軽にお問い合わせください。", en:"Should you have any questions, please don't hesitate to contact me." },
+  { cat:"メール", jp:"引き続きよろしくお願いいたします。", en:"Thank you for your continued support." },
+  { cat:"交渉", jp:"予算の都合上、この価格では難しいです。", en:"Given our budget constraints, this price would be difficult for us." },
+  { cat:"交渉", jp:"もう少しお値引きいただくことは可能でしょうか?", en:"Would it be possible to offer us a further discount?" },
+  { cat:"交渉", jp:"数量を増やせば、単価を下げていただけますか?", en:"If we increase the order volume, could you lower the unit price?" },
+  { cat:"交渉", jp:"御社のご提案を前向きに検討しています。", en:"We are giving your proposal serious consideration." },
+  { cat:"交渉", jp:"この条件でしたら、お受けできます。", en:"We can accept these terms." },
+  { cat:"交渉", jp:"契約条件について、いくつか確認させてください。", en:"I'd like to clarify a few points regarding the contract terms." },
+  { cat:"電話", jp:"お電話ありがとうございます。〇〇社の△△です。", en:"Thank you for calling. This is [name] from [company]." },
+  { cat:"電話", jp:"あいにく田中は席を外しております。", en:"I'm afraid Tanaka is away from his desk at the moment." },
+  { cat:"電話", jp:"折り返しお電話するよう伝えます。", en:"I'll have him call you back." },
+  { cat:"電話", jp:"お電話が少し遠いようです。もう一度おっしゃっていただけますか?", en:"I'm having trouble hearing you. Could you say that again, please?" },
+  { cat:"電話", jp:"確認して、改めてご連絡いたします。", en:"Let me check on that and get back to you." },
+  { cat:"雑談・社交", jp:"はじめまして。お会いできて光栄です。", en:"It's a pleasure to meet you." },
+  { cat:"雑談・社交", jp:"フライトはいかがでしたか?", en:"How was your flight?" },
+  { cat:"雑談・社交", jp:"日本は初めてですか?", en:"Is this your first time in Japan?" },
+  { cat:"雑談・社交", jp:"何かお困りのことがあれば、いつでも声をかけてください。", en:"If you need anything at all, please feel free to ask." },
+  { cat:"雑談・社交", jp:"本日はありがとうございました。今後ともよろしくお願いします。", en:"Thank you for today. I look forward to working with you." },
+  { cat:"報告・依頼", jp:"進捗状況をご報告します。", en:"Let me give you an update on our progress." },
+  { cat:"報告・依頼", jp:"予定より少し遅れていますが、今週中には追いつく見込みです。", en:"We're slightly behind schedule, but we expect to catch up by the end of this week." },
+  { cat:"報告・依頼", jp:"この資料のレビューをお願いできますか?", en:"Could I ask you to review this document?" },
+  { cat:"報告・依頼", jp:"優先順位を確認させてください。どちらを先に進めるべきでしょうか?", en:"I'd like to confirm the priorities. Which one should we work on first?" },
+  { cat:"報告・依頼", jp:"承知しました。すぐに対応します。", en:"Understood. I'll take care of it right away." },
+  { cat:"報告・依頼", jp:"締め切りを1日延ばしていただくことは可能でしょうか?", en:"Would it be possible to extend the deadline by one day?" },
+];
+
+/* ==================== state / storage ==================== */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("toeic_" + k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem("toeic_" + k, JSON.stringify(v)); } catch {} }
+};
+
+function recordAnswer(correct) {
+  const s = store.get("score", { total: 0, correct: 0 });
+  s.total++; if (correct) s.correct++;
+  store.set("score", s);
+  const today = new Date().toISOString().slice(0, 10);
+  const days = store.get("days", []);
+  if (!days.includes(today)) { days.push(today); store.set("days", days); }
+  renderStats();
+}
+
+function calcStreak(days) {
+  if (!days.length) return 0;
+  const set = new Set(days);
+  let streak = 0;
+  const d = new Date();
+  // 今日まだ学習していなければ昨日から数える
+  if (!set.has(d.toISOString().slice(0, 10))) d.setDate(d.getDate() - 1);
+  while (set.has(d.toISOString().slice(0, 10))) { streak++; d.setDate(d.getDate() - 1); }
+  return streak;
+}
+
+function renderStats() {
+  const s = store.get("score", { total: 0, correct: 0 });
+  document.getElementById("st-total").textContent = s.total;
+  document.getElementById("st-acc").textContent = s.total ? Math.round(s.correct / s.total * 100) + "%" : "-";
+  document.getElementById("st-streak").textContent = calcStreak(store.get("days", []));
+}
+
+/* ==================== navigation ==================== */
+function go(v) {
+  document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
+  document.getElementById("view-" + v).classList.add("active");
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("active", b.dataset.v === v));
+  window.scrollTo(0, 0);
+  if (v === "grammar" && !grammarStarted) { grammarStarted = true; startReading(); }
+  if (v === "listening" && !listeningStarted) startListening();
+}
+
+/* ==================== speech ==================== */
+let allVoices = [];
+function loadVoices() { allVoices = speechSynthesis.getVoices(); }
+if ("speechSynthesis" in window) {
+  loadVoices();
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+// 端末に該当アクセントの音声がない場合の代用順
+const VOICE_FALLBACK = {
+  "en-US": ["en-US", "en-GB"],
+  "en-GB": ["en-GB", "en-AU", "en-US"],
+  "en-AU": ["en-AU", "en-NZ", "en-GB", "en-US"],
+  "en-NZ": ["en-NZ", "en-AU", "en-GB", "en-US"],
+};
+function voiceFor(lang) {
+  const vs = allVoices.length ? allVoices : speechSynthesis.getVoices();
+  const norm = v => v.lang.replace("_", "-");
+  for (const l of (VOICE_FALLBACK[lang] || [lang])) {
+    const hit = vs.find(v => norm(v) === l && /natural/i.test(v.name)) || vs.find(v => norm(v) === l);
+    if (hit) return hit;
+  }
+  return vs.find(v => norm(v).startsWith(lang.slice(0, 2))) || null;
+}
+function speak(text, rate, lang) {
+  if (!("speechSynthesis" in window)) { alert("この端末は音声再生に対応していません"); return null; }
+  lang = lang || "en-US";
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  const v = voiceFor(lang);
+  if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = lang; }
+  u.rate = rate || 1;
+  speechSynthesis.speak(u);
+  return v;
+}
+
+/* ==================== vocab ==================== */
+let vocabLevel = "600", vocabIdx = 0, flipped = false;
+
+function setVocabLevel(btn) {
+  document.querySelectorAll("#vocab-levels .pill").forEach(p => p.classList.remove("on"));
+  btn.classList.add("on");
+  vocabLevel = btn.dataset.lv;
+  vocabIdx = store.get("vocabIdx_" + vocabLevel, 0);
+  flipped = false;
+  renderCard();
+}
+function renderCard() {
+  const list = VOCAB[vocabLevel];
+  const c = list[vocabIdx];
+  const el = document.getElementById("flash-card");
+  document.getElementById("vocab-prog").style.width = ((vocabIdx + 1) / list.length * 100) + "%";
+  if (!flipped) {
+    el.innerHTML = `<div class="word">${c.w}</div><div class="pos">${c.pos}</div>
+      <div class="hint">タップして意味を表示 (${vocabIdx + 1}/${list.length})</div>`;
+  } else {
+    el.innerHTML = `<div class="word" style="font-size:1.4rem;">${c.w}</div>
+      <div class="meaning">${c.m}</div>
+      <div class="example">${c.ex}<br><span style="font-size:.8rem;">${c.exj}</span></div>`;
+  }
+}
+function flipCard() { flipped = !flipped; renderCard(); }
+function nextCard() {
+  vocabIdx = (vocabIdx + 1) % VOCAB[vocabLevel].length;
+  store.set("vocabIdx_" + vocabLevel, vocabIdx);
+  flipped = false; renderCard();
+}
+function prevCard() {
+  vocabIdx = (vocabIdx - 1 + VOCAB[vocabLevel].length) % VOCAB[vocabLevel].length;
+  store.set("vocabIdx_" + vocabLevel, vocabIdx);
+  flipped = false; renderCard();
+}
+function speakCard() { speak(VOCAB[vocabLevel][vocabIdx].w); }
+
+/* ==================== quiz engine (grammar) ==================== */
+const QUIZ_SIZE = 10;
+let grammarStarted = false, gQuestions = [], gIdx = 0, gCorrect = 0, gAnswered = false;
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function startGrammar() {
+  grammarStarted = true;
+  gQuestions = shuffle(GRAMMAR).slice(0, QUIZ_SIZE);
+  gIdx = 0; gCorrect = 0;
+  renderGrammar();
+}
+function renderGrammar() {
+  const area = document.getElementById("grammar-area");
+  if (gIdx >= gQuestions.length) {
+    const pct = Math.round(gCorrect / gQuestions.length * 100);
+    const msg = pct >= 90 ? "素晴らしい!この調子で本番へ 🎉" : pct >= 70 ? "好調です。間違えた問題の解説を復習しましょう。" : "解説をじっくり読んで、もう1セット挑戦しましょう。";
+    area.innerHTML = `<div class="card result-big">
+      <div class="score">${gCorrect} / ${gQuestions.length}</div>
+      <div class="msg">正答率 ${pct}%<br>${msg}</div>
+      <button class="btn" style="margin-top:18px;" onclick="startGrammar()">もう1セット挑戦</button>
+    </div>`;
+    return;
+  }
+  const q = gQuestions[gIdx];
+  gAnswered = false;
+  area.innerHTML = `
+    <div class="progress-bar"><div style="width:${gIdx / gQuestions.length * 100}%"></div></div>
+    <div class="card">
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:10px;">Question ${gIdx + 1} / ${gQuestions.length}</div>
+      <div class="q-text">${q.q.replace("___", '<span class="blank">＿＿＿</span>')}</div>
+      <div class="choices">${q.c.map((c, i) =>
+        `<button class="choice" onclick="answerGrammar(${i}, this)">(${"ABCD"[i]}) ${c}</button>`).join("")}</div>
+      <div class="explain" id="g-explain">
+        <b>💡 解説:</b> ${q.ep}<div class="trans">訳: ${q.tr}</div>
+        <button class="btn small" style="margin-top:12px;" onclick="gIdx++; renderGrammar();">次の問題 →</button>
+      </div>
+    </div>`;
+}
+function answerGrammar(i, btn) {
+  if (gAnswered) return;
+  gAnswered = true;
+  const q = gQuestions[gIdx];
+  const btns = document.querySelectorAll("#grammar-area .choice");
+  btns[q.a].classList.add("correct");
+  if (i === q.a) { gCorrect++; } else { btn.classList.add("wrong"); }
+  recordAnswer(i === q.a);
+  document.getElementById("g-explain").classList.add("show");
+}
+
+/* ==================== reading: Part 6・7 passage engine ==================== */
+let readingPart = "5";
+function setPart(btn) {
+  document.querySelectorAll("#reading-parts .pill").forEach(p => p.classList.remove("on"));
+  btn.classList.add("on");
+  readingPart = btn.dataset.part;
+  startReading();
+}
+function startReading() {
+  if (readingPart === "5") startGrammar(); else startPassages();
+}
+let psList = [], psIdx = 0, psCorrect = 0, psTotal = 0, psDone = 0, psStart = 0;
+function startPassages() {
+  psList = shuffle(readingPart === "6" ? PART6 : PART7);
+  psIdx = 0; psCorrect = 0; psTotal = 0;
+  renderPassage();
+}
+function fmtPassage(text) {
+  return text.replace(/___(\d)___/g, '<span class="blank">＿($1)＿</span>');
+}
+function renderPassage() {
+  const area = document.getElementById("grammar-area");
+  if (psIdx >= psList.length) {
+    const pct = psTotal ? Math.round(psCorrect / psTotal * 100) : 0;
+    const msg = pct >= 90 ? "素晴らしい!本番でも通用するレベルです 🎉" : pct >= 70 ? "好調です。次は目標時間内に解き切る練習を。" : "全訳と照らし合わせて、読めなかった文を音読するのが効果的です。";
+    area.innerHTML = `<div class="card result-big">
+      <div class="score">${psCorrect} / ${psTotal}</div>
+      <div class="msg">正答率 ${pct}%<br>${msg}</div>
+      <button class="btn" style="margin-top:18px;" onclick="startPassages()">もう1セット挑戦</button>
+    </div>`;
+    return;
+  }
+  const p = psList[psIdx];
+  psDone = 0; psStart = Date.now();
+  area.innerHTML = `
+    <div class="progress-bar"><div style="width:${psIdx / psList.length * 100}%"></div></div>
+    <div class="card">
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:10px;">文書 ${psIdx + 1} / ${psList.length} ・ ${p.type} ・ 目標 ${p.min}分</div>
+      <div class="passage">${fmtPassage(p.text)}</div>
+      ${p.qs.map((q, qi) => `
+        <div class="pq" id="pq-${qi}">
+          <div class="prompt">${qi + 1}. ${q.q || `空所 (${qi + 1}) に入る最も適切なものは?`}</div>
+          <div class="choices">${q.c.map((c, ci) =>
+            `<button class="choice" onclick="answerPassage(${qi},${ci},this)">(${"ABCD"[ci]}) ${c}</button>`).join("")}</div>
+          <div class="explain" id="pq-ex-${qi}"><b>💡 解説:</b> ${q.ep}</div>
+        </div>`).join("")}
+      <div class="explain" id="ps-done">
+        <b>⏱ 結果:</b> <span id="ps-time"></span>
+        <div class="trans" style="margin-top:8px;"><b>全訳:</b><br>${p.tr}</div>
+        <button class="btn small" style="margin-top:12px;" onclick="psIdx++; renderPassage(); window.scrollTo(0,0);">次の文書 →</button>
+      </div>
+    </div>`;
+}
+function answerPassage(qi, ci, btn) {
+  const p = psList[psIdx], q = p.qs[qi];
+  const block = document.getElementById("pq-" + qi);
+  if (block.dataset.done) return;
+  block.dataset.done = "1";
+  const btns = block.querySelectorAll(".choice");
+  btns[q.a].classList.add("correct");
+  if (ci === q.a) psCorrect++; else btn.classList.add("wrong");
+  psTotal++; psDone++;
+  recordAnswer(ci === q.a);
+  document.getElementById("pq-ex-" + qi).classList.add("show");
+  if (psDone === p.qs.length) {
+    const sec = Math.round((Date.now() - psStart) / 1000);
+    document.getElementById("ps-time").textContent = `所要時間 ${Math.floor(sec / 60)}分${sec % 60}秒(目標 ${p.min}分)`;
+    document.getElementById("ps-done").classList.add("show");
+  }
+}
+
+/* ==================== listening ==================== */
+const ACCENTS = [
+  ["random", "🌏 ミックス"], ["en-US", "🇺🇸 米"], ["en-GB", "🇬🇧 英"], ["en-AU", "🇦🇺 豪"], ["en-NZ", "🇳🇿 NZ"]
+];
+const ACCENT_NAMES = { "en-US":"🇺🇸 アメリカ", "en-GB":"🇬🇧 イギリス", "en-AU":"🇦🇺 オーストラリア", "en-NZ":"🇳🇿 ニュージーランド" };
+let accent = "random", currentAccent = "en-US";
+function renderAccents() {
+  document.getElementById("accent-row").innerHTML = ACCENTS.map(([c, l]) =>
+    `<button class="pill ${accent === c ? "on" : ""}" onclick="setAccent('${c}')">${l}</button>`).join("");
+}
+function pickRandomAccent() {
+  const pool = ["en-US", "en-GB", "en-AU", "en-NZ"];
+  currentAccent = pool[Math.floor(Math.random() * pool.length)];
+}
+function setAccent(c) {
+  accent = c;
+  if (c === "random") pickRandomAccent(); else currentAccent = c;
+  renderAccents();
+  updateAccentLabel("");
+}
+function updateAccentLabel(note) {
+  const el = document.getElementById("accent-label");
+  if (el) el.textContent = (ACCENT_NAMES[currentAccent] || "") + (note ? " " + note : "");
+}
+function playListening() {
+  const v = speak(lQuestions[lIdx].audio, lRate, currentAccent);
+  const matched = v && v.lang.replace("_", "-").startsWith(currentAccent);
+  updateAccentLabel(matched ? "" : "(端末に音声がないため近いアクセントで代用)");
+}
+let listeningStarted = false, lQuestions = [], lIdx = 0, lCorrect = 0, lAnswered = false, lRate = 1;
+
+function startListening() {
+  listeningStarted = true;
+  lQuestions = shuffle(LISTENING).slice(0, 8);
+  lIdx = 0; lCorrect = 0;
+  renderListening();
+}
+function renderListening() {
+  speechSynthesis.cancel();
+  const area = document.getElementById("listening-area");
+  if (lIdx >= lQuestions.length) {
+    const pct = Math.round(lCorrect / lQuestions.length * 100);
+    const msg = pct >= 90 ? "リスニング絶好調です 🎉" : pct >= 70 ? "良いペースです。スクリプトで聞き取れなかった箇所を確認しましょう。" : "1.0倍速→0.8倍速の順で繰り返し聞くのが効果的です。";
+    area.innerHTML = `<div class="card result-big">
+      <div class="score">${lCorrect} / ${lQuestions.length}</div>
+      <div class="msg">正答率 ${pct}%<br>${msg}</div>
+      <button class="btn" style="margin-top:18px;" onclick="startListening()">もう1セット挑戦</button>
+    </div>`;
+    return;
+  }
+  const q = lQuestions[lIdx];
+  lAnswered = false;
+  if (accent === "random") pickRandomAccent(); else currentAccent = accent;
+  area.innerHTML = `
+    <div class="progress-bar"><div style="width:${lIdx / lQuestions.length * 100}%"></div></div>
+    <div class="card">
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:6px;">Question ${lIdx + 1} / ${lQuestions.length} — 音声を聞いて答えてください</div>
+      <button class="play-btn" onclick="playListening()">▶</button>
+      <div class="accent-label" id="accent-label"></div>
+      <div class="speed-row">
+        <button class="pill ${lRate === 0.8 ? "on" : ""}" onclick="lRate=0.8; renderSpeed(this)">0.8x</button>
+        <button class="pill ${lRate === 1 ? "on" : ""}" onclick="lRate=1; renderSpeed(this)">1.0x</button>
+        <button class="pill ${lRate === 1.2 ? "on" : ""}" onclick="lRate=1.2; renderSpeed(this)">1.2x</button>
+      </div>
+      <div class="q-text" style="font-size:.95rem;">${q.q}</div>
+      <div class="choices">${q.c.map((c, i) =>
+        `<button class="choice" onclick="answerListening(${i}, this)">(${"ABCD"[i]}) ${c}</button>`).join("")}</div>
+      <div class="explain" id="l-explain">
+        <b>📝 スクリプト(訳):</b><div class="trans">${q.script}</div>
+        <div class="trans" style="margin-top:6px;font-style:italic;">"${q.audio}"</div>
+        <button class="btn small" style="margin-top:12px;" onclick="lIdx++; renderListening();">次の問題 →</button>
+      </div>
+    </div>`;
+  updateAccentLabel("");
+}
+function renderSpeed(btn) {
+  btn.parentElement.querySelectorAll(".pill").forEach(p => p.classList.remove("on"));
+  btn.classList.add("on");
+}
+function answerListening(i, btn) {
+  if (lAnswered) return;
+  lAnswered = true;
+  const q = lQuestions[lIdx];
+  const btns = document.querySelectorAll("#listening-area .choice");
+  btns[q.a].classList.add("correct");
+  if (i === q.a) { lCorrect++; } else { btn.classList.add("wrong"); }
+  recordAnswer(i === q.a);
+  document.getElementById("l-explain").classList.add("show");
+}
+
+/* ==================== phrases ==================== */
+let phraseCat = "すべて";
+function renderPhraseCats() {
+  const cats = ["すべて", ...new Set(PHRASES.map(p => p.cat))];
+  document.getElementById("phrase-cats").innerHTML = cats.map(c =>
+    `<button class="pill ${c === phraseCat ? "on" : ""}" onclick="phraseCat='${c}'; renderPhraseCats(); renderPhrases();">${c}</button>`).join("");
+}
+function renderPhrases() {
+  const list = phraseCat === "すべて" ? PHRASES : PHRASES.filter(p => p.cat === phraseCat);
+  document.getElementById("phrase-list").innerHTML = list.map((p, i) => `
+    <div class="phrase-card" onclick="this.classList.toggle('open')">
+      <div class="tag">${p.cat}</div>
+      <div class="jp">${p.jp}</div>
+      <div class="en"><span>${p.en}</span>
+        <button class="spk" onclick="event.stopPropagation(); speak(${JSON.stringify(p.en).replace(/"/g, "&quot;")})">🔊</button>
+      </div>
+    </div>`).join("");
+}
+
+/* ==================== translator ==================== */
+let trDir = "ja|en";
+function setDir(dir, btn) {
+  trDir = dir;
+  document.querySelectorAll(".dir-toggle button").forEach(b => b.classList.remove("on"));
+  btn.classList.add("on");
+  document.getElementById("tr-input").placeholder =
+    dir === "ja|en" ? "翻訳したい日本語の文章を入力してください" : "Enter the English text you want to translate";
+}
+async function doTranslate() {
+  const text = document.getElementById("tr-input").value.trim();
+  const out = document.getElementById("tr-output");
+  if (!text) { out.textContent = "文章を入力してください"; return; }
+  out.classList.add("loading");
+  out.textContent = "翻訳中…";
+  updateExtLinks(text);
+  try {
+    // 文単位で分割して翻訳精度を上げる(MyMemoryは500文字/リクエスト上限)
+    const chunks = splitText(text, 450);
+    const results = [];
+    for (const chunk of chunks) {
+      const url = "https://api.mymemory.translated.net/get?q=" + encodeURIComponent(chunk) + "&langpair=" + encodeURIComponent(trDir);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      if (data.responseStatus !== 200) throw new Error(data.responseDetails || "翻訳エラー");
+      results.push(decodeHtml(data.responseData.translatedText));
+    }
+    out.classList.remove("loading");
+    out.textContent = results.join("\n");
+  } catch (e) {
+    out.classList.remove("loading");
+    out.textContent = "⚠ 翻訳に失敗しました(" + e.message + ")。\n通信環境をご確認いただくか、下の DeepL / Google 翻訳リンクをご利用ください。";
+  }
+}
+function splitText(text, max) {
+  if (text.length <= max) return [text];
+  const parts = text.split(/(?<=[。.!?！?\n])/);
+  const chunks = []; let cur = "";
+  for (const p of parts) {
+    if ((cur + p).length > max && cur) { chunks.push(cur); cur = ""; }
+    cur += p;
+  }
+  if (cur) chunks.push(cur);
+  return chunks;
+}
+function decodeHtml(s) { const t = document.createElement("textarea"); t.innerHTML = s; return t.value; }
+function updateExtLinks(text) {
+  const enc = encodeURIComponent(text.slice(0, 1000));
+  const [from, to] = trDir.split("|");
+  document.getElementById("link-deepl").href = `https://www.deepl.com/translator#${from}/${to}/${enc}`;
+  document.getElementById("link-google").href = `https://translate.google.com/?sl=${from}&tl=${to}&text=${enc}&op=translate`;
+}
+function clearTranslate() {
+  document.getElementById("tr-input").value = "";
+  document.getElementById("tr-output").textContent = "ここに翻訳結果が表示されます";
+}
+function copyResult() {
+  const t = document.getElementById("tr-output").textContent;
+  navigator.clipboard.writeText(t).then(() => alert("コピーしました"));
+}
+function speakResult() {
+  const t = document.getElementById("tr-output").textContent;
+  speak(t, 1, trDir === "ja|en" ? "en-US" : "ja-JP");
+}
+
+/* ==================== init ==================== */
+vocabIdx = store.get("vocabIdx_600", 0);
+renderStats();
+renderCard();
+renderPhraseCats();
+renderPhrases();
+renderAccents();
+</script>
+</body>
+</html>
