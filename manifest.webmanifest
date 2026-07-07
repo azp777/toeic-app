@@ -1,0 +1,14 @@
+{
+  "name": "TOEIC 攻略トレーナー",
+  "short_name": "TOEIC",
+  "description": "スキマ時間で回せるTOEIC学習アプリ(Part5-7・リスニング・単語・弱点復習)",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

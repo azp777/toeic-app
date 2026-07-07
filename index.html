@@ -197,7 +197,14 @@
   .note { font-size: .7rem; color: var(--muted); margin-top: 10px; line-height: 1.7; }
   .copy-btn { margin-top: 10px; }
   .back-link { color: var(--muted); font-size: .8rem; background: none; border: none; cursor: pointer; font-family: inherit; margin-bottom: 12px; display: inline-block; }
+  .weak-badge { display:inline-block; min-width:20px; text-align:center; background:#ef4444; color:#fff; border-radius:12px; padding:1px 7px; font-size:.72rem; margin-left:5px; }
+  .install-hint { background:#0b1220; border:1px dashed #334155; border-radius:12px; padding:12px 14px; font-size:.76rem; color:var(--muted); line-height:1.7; margin-top:14px; }
+  .install-hint b { color:var(--txt); }
 </style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0f172a">
+<link rel="apple-touch-icon" href="icon-192.png">
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}</script>
 </head>
 <body>
 
@@ -219,6 +226,14 @@
     </div>
   </div>
   <div class="menu-grid">
+    <div class="menu-item" onclick="startQuick()" style="grid-column: 1 / -1; border-color:#f59e0b;">
+      <div class="mi-ico">⚡</div><div class="mi-title">3分クイックドリル</div>
+      <div class="mi-desc">弱点優先で10問だけ。通勤・移動中のスキマ時間に</div>
+    </div>
+    <div class="menu-item" onclick="startWeakMode()" style="grid-column: 1 / -1;">
+      <div class="mi-ico">🔥</div><div class="mi-title">弱点復習<span class="weak-badge" id="weak-badge">0</span></div>
+      <div class="mi-desc">間違えた問題を1日→3日→7日後に再出題(忘却曲線)</div>
+    </div>
     <div class="menu-item" onclick="go('vocab')">
       <div class="mi-ico">📚</div><div class="mi-title">単語カード</div>
       <div class="mi-desc">スコア帯別の頻出単語を音声つきで暗記</div>
@@ -240,6 +255,18 @@
       <div class="mi-desc">日本語⇔英語の翻訳。仕事のメール・資料の下書きに</div>
     </div>
   </div>
+  <div class="install-hint">
+    📲 <b>ホーム画面に追加するとアプリとして使えます</b><br>
+    iPhone:Safariで開く → 共有ボタン → 「ホーム画面に追加」<br>
+    Android:Chromeで開く → メニュー(⋮) → 「ホーム画面に追加」<br>
+    一度開けばオフライン(地下鉄・トンネル)でも学習できます ※翻訳ツールのみ通信が必要
+  </div>
+</div>
+
+<!-- ============ QUICK / WEAK ============ -->
+<div class="view" id="view-quick">
+  <button class="back-link" onclick="go('home')">← ホームへ戻る</button>
+  <div id="quick-area"></div>
 </div>
 
 <!-- ============ VOCAB ============ -->
@@ -457,6 +484,34 @@ const GRAMMAR = [
   { q:"Due to budget constraints, the project has been put ___ hold indefinitely.", c:["on","in","at","for"], a:0, ep:"put on hold「保留にする」。電話の保留にも使う頻出イディオムです。", tr:"予算上の制約により、プロジェクトは無期限に保留となった。" },
   { q:"Had the shipment arrived on time, we ___ the deadline.", c:["met","would have met","will meet","meet"], a:1, ep:"Had S done = If S had done の倒置(仮定法過去完了)。帰結節は would have + 過去分詞。", tr:"もし荷物が時間通りに届いていたら、締め切りに間に合っていただろう。" },
   { q:"The company's new headquarters is conveniently ___ near the central station.", c:["located","location","locates","locating"], a:0, ep:"be located「位置している」。conveniently located near 〜 は不動産・オフィス紹介の定番表現。", tr:"会社の新本社は中央駅の近くという便利な場所にある。" },
+  { q:"Please ensure that all safety equipment is inspected ___ a regular basis.", c:["on","in","at","with"], a:0, ep:"on a regular basis「定期的に」= regularly。on a daily / monthly basis も同じ型で頻出です。", tr:"すべての安全装備が定期的に点検されるようにしてください。" },
+  { q:"The workshop has been rescheduled ___ a conflict with the annual sales meeting.", c:["owing to","because","even though","so that"], a:0, ep:"空所の後ろが名詞句なので前置詞句 owing to(〜のため)。because / even though は接続詞で S+V が必要です。", tr:"年次販売会議と日程が重なったため、ワークショップの日程が変更されました。" },
+  { q:"___ signing the contract, please initial each page in the bottom right corner.", c:["Before","Until","Despite","Whether"], a:0, ep:"Before -ing「〜する前に」。文意は「署名する前に各ページへイニシャルを」。", tr:"契約書に署名する前に、各ページの右下にイニシャルを記入してください。" },
+  { q:"The committee members could not reach a ___ on the proposed budget cuts.", c:["consensus","consent","consist","consequence"], a:0, ep:"reach a consensus「合意に達する」。consent(同意)は reach と組みません。似た形の語を区別する語彙問題です。", tr:"委員会のメンバーは、提案された予算削減について合意に達することができなかった。" },
+  { q:"Ms. Okada will assume the role of branch manager ___ Mr. Lee retires next month.", c:["when","by","during","until"], a:0, ep:"時の接続詞 when + S V。「退職するときに引き継ぐ」。until だと「退職するまで就任」となり不自然です。", tr:"リーさんが来月退職する際に、岡田さんが支店長の役職を引き継ぎます。" },
+  { q:"All ___ for the design competition must be submitted electronically by March 31.", c:["entries","enters","entered","entering"], a:0, ep:"All + 複数名詞。entry「応募(作品)」の複数形 entries が主語になります。", tr:"デザインコンペへの応募作品はすべて3月31日までに電子提出しなければならない。" },
+  { q:"The customer survey results were ___ with the findings of last year's study.", c:["consistent","consisting","consisted","consistency"], a:0, ep:"be consistent with 〜「〜と一致している」。前置詞 with とセットで覚える形容詞です。", tr:"顧客調査の結果は昨年の調査結果と一致していた。" },
+  { q:"Employees may park in the visitor lot ___ they obtain a permit from security.", c:["provided that","in case of","instead of","according to"], a:0, ep:"provided that + S V「〜という条件で」。他の選択肢は前置詞句なので後ろに S+V を続けられません。", tr:"警備室から許可証を取得することを条件に、従業員は来客用駐車場を利用できます。" },
+  { q:"The keynote speech was ___ received by the conference attendees.", c:["enthusiastically","enthusiastic","enthusiasm","enthusiast"], a:0, ep:"受動態 was received を修飾するのは副詞 enthusiastically。動詞を修飾するのは副詞、が鉄則です。", tr:"基調講演は会議の参加者に熱狂的に迎えられた。" },
+  { q:"___ the merger is finalized, the two companies will operate under a single brand name.", c:["Once","Yet","Ever","Soon"], a:0, ep:"Once + S V「いったん〜すれば」。接続詞として使えるのは once だけです。", tr:"合併が完了すれば、両社は単一のブランド名で営業する。" },
+  { q:"Please direct any ___ regarding payroll to the Human Resources Department.", c:["inquiries","inquires","inquired","inquiring"], a:0, ep:"any + 複数名詞。inquiry「問い合わせ」の複数形。direct A to B「AをBに回す」も頻出です。", tr:"給与に関するお問い合わせは人事部までお願いします。" },
+  { q:"The factory tour lasts approximately 90 minutes, ___ a short video presentation.", c:["including","include","included","inclusion"], a:0, ep:"including 〜「〜を含めて」(前置詞化した分詞)。対義の excluding「〜を除いて」とセットで覚えましょう。", tr:"工場見学は短い映像上映を含めて約90分です。" },
+  { q:"Of the three proposals, Ms. Tanaka's was by far the ___.", c:["most innovative","more innovative","innovative","innovation"], a:0, ep:"Of the three(3つの中で)なので最上級。by far は最上級を強める副詞句です。", tr:"3つの提案の中で、田中さんのものが群を抜いて最も革新的だった。" },
+  { q:"Refunds will be issued ___ ten business days of receiving the returned merchandise.", c:["within","among","along","toward"], a:0, ep:"within + 期間「〜以内に」。within ten business days は返金・発送分野の定番表現。", tr:"返品商品の受領後、10営業日以内に返金いたします。" },
+  { q:"The new inventory system is far more efficient ___ the one we used previously.", c:["than","as","from","over"], a:0, ep:"比較級 more efficient には than。as を使うなら as efficient as の形になります。", tr:"新しい在庫システムは、以前使っていたものよりはるかに効率的だ。" },
+  { q:"___ who wish to volunteer for the charity event should contact Ms. Ito by Friday.", c:["Those","Anyone","Whoever","Each"], a:0, ep:"動詞が wish(複数)なので Those who。Anyone / Whoever なら wishes(単数)になります。動詞の形が決め手。", tr:"チャリティイベントのボランティアを希望する方は、金曜日までに伊藤さんへ連絡してください。" },
+  { q:"The marketing director was ___ with the initial response to the new ad campaign.", c:["pleased","pleasing","pleasure","pleasant"], a:0, ep:"人が主語なので過去分詞 pleased(満足して)。be pleased with 〜。物が主語なら pleasing(満足させる)です。", tr:"マーケティング部長は新しい広告キャンペーンへの初期反応に満足していた。" },
+  { q:"___ its compact size, the new printer can handle large-volume printing jobs.", c:["Despite","Although","Nevertheless","Even"], a:0, ep:"後ろが名詞句 (its compact size) なので前置詞 Despite。Although は接続詞、Nevertheless は副詞です。", tr:"コンパクトなサイズにもかかわらず、新しいプリンターは大量の印刷にも対応できる。" },
+  { q:"Attendance at the safety briefing is ___ for all warehouse staff.", c:["mandatory","tentative","preliminary","redundant"], a:0, ep:"mandatory「義務的な・必須の」。voluntary(任意の)の対義語として覚えましょう。860点レベルの頻出語。", tr:"倉庫スタッフ全員にとって、安全説明会への出席は必須です。" },
+  { q:"The quarterly report highlights several areas ___ costs could be reduced.", c:["where","which","what","whom"], a:0, ep:"先行詞 areas のあとに完全な文が続くので関係副詞 where。which なら後ろは主語か目的語が欠けた文になります。", tr:"四半期報告書は、コストを削減できる可能性のあるいくつかの領域を指摘している。" },
+  { q:"Ticket prices include admission to the museum ___ a guided tour of the special exhibit.", c:["as well as","so that","in order to","as long as"], a:0, ep:"A as well as B「AだけでなくBも」。名詞句どうしをつなげます。", tr:"チケット料金には、美術館の入場料に加えて特別展のガイドツアーが含まれています。" },
+  { q:"The board unanimously ___ the proposal to expand into the Asian market.", c:["approved","agreed","complied","responded"], a:0, ep:"approve は他動詞で直接目的語を取れます。agree なら to / with、comply なら with が必要。自動詞/他動詞の区別が決め手。", tr:"取締役会はアジア市場への進出案を全会一致で承認した。" },
+  { q:"Construction of the new wing is expected to be completed ___ the end of the year.", c:["by","until","on","since"], a:0, ep:"by「〜までに(完了の期限)」。until は「〜まで(継続)」。complete のような完了動詞には by を使います。", tr:"新館の建設は年末までに完了する見込みです。" },
+  { q:"Employees are reminded to back up their files ___, preferably at the end of each day.", c:["frequently","frequent","frequency","frequenting"], a:0, ep:"動詞 back up を修飾する副詞 frequently。", tr:"従業員の皆さんは、できれば毎日終業時に、こまめにファイルをバックアップしてください。" },
+  { q:"___ of the workshop participants received a certificate of completion.", c:["Each","Every","Almost","Most of"], a:0, ep:"Each of the + 複数名詞。Every は every participant の形でしか使えず、of を続けられません。", tr:"ワークショップの参加者はそれぞれ修了証を受け取った。" },
+  { q:"The airline offers complimentary meals on all ___ flights.", c:["international","internationally","internationalize","internationality"], a:0, ep:"名詞 flights を修飾する形容詞 international。complimentary「無料の」も頻出語です。", tr:"その航空会社はすべての国際線で無料の機内食を提供している。" },
+  { q:"Sales of the new model have exceeded ___, prompting the factory to add a third shift.", c:["expectations","expects","expectantly","expecting"], a:0, ep:"exceed expectations「予想を上回る」— 決まり文句。動詞 exceeded の目的語になる名詞です。", tr:"新モデルの売上は予想を上回り、工場は第3シフトを追加することになった。" },
+  { q:"Ms. Fernandez, ___ tenure as CFO began in 2021, will oversee the restructuring plan.", c:["whose","who","whom","which"], a:0, ep:"空所の後ろに名詞 tenure(在職期間)が続くので所有格の関係代名詞 whose。", tr:"2021年にCFOに就任したフェルナンデスさんが、再編計画を統括します。" },
 ];
 
 /* ==================== データ:Part 6 (長文穴埋め) ==================== */
@@ -690,6 +745,54 @@ function renderStats() {
   document.getElementById("st-streak").textContent = calcStreak(store.get("days", []));
 }
 
+/* ==================== 弱点SRS(忘却曲線:1日→3日→7日で卒業) ==================== */
+GRAMMAR.forEach((q, i) => q.id = "g" + i);
+const QBYID = {}; GRAMMAR.forEach(q => QBYID[q.id] = q);
+let weakSession = false;
+function srsGet() { return store.get("srs", {}); }
+function srsSet(r) { store.set("srs", r); }
+function srsDate(n) { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); }
+function srsMarkWrong(id) { const r = srsGet(); r[id] = { due: srsDate(0), iv: 1 }; srsSet(r); renderWeakBadge(); }
+function srsMarkCorrect(id) {
+  const r = srsGet(); const it = r[id]; if (!it) return;
+  if (weakSession) {
+    // 弱点モードで正解→次の間隔へ(1→3→7日)。7日で正解したら卒業
+    if (it.iv >= 7) { delete r[id]; } else { it.iv = it.iv === 1 ? 3 : 7; it.due = srsDate(it.iv); r[id] = it; }
+  } else { delete r[id]; }
+  srsSet(r); renderWeakBadge();
+}
+function srsDueIds() { const r = srsGet(); const t = srsDate(0); return Object.keys(r).filter(id => (r[id].due || t) <= t); }
+function renderWeakBadge() {
+  const el = document.getElementById("weak-badge"); if (!el) return;
+  const due = srsDueIds().length, all = Object.keys(srsGet()).length;
+  el.textContent = due + "/" + all;
+  el.style.background = due > 0 ? "#ef4444" : "#334155";
+}
+
+/* ==================== クイックドリル / 弱点モード ==================== */
+function startQuick() {
+  const due = srsDueIds().map(id => QBYID[id]).filter(Boolean);
+  const rest = shuffle(GRAMMAR.filter(q => !due.includes(q)));
+  gArea = "quick-area"; gRestart = startQuick; weakSession = false;
+  gQuestions = shuffle(due).slice(0, 5).concat(rest).slice(0, 10);
+  gIdx = 0; gCorrect = 0;
+  go("quick"); renderGrammar();
+}
+function startWeakMode() {
+  const due = srsDueIds().map(id => QBYID[id]).filter(Boolean);
+  const all = Object.keys(srsGet()).length;
+  if (!due.length) {
+    alert(all > 0
+      ? "今日の復習分は完了しています🎉\n弱点リストには全" + all + "問。忘却曲線に合わせて後日再出題されます。"
+      : "弱点問題はまだありません。\nドリルや読解で間違えた問題がここに溜まります。");
+    return;
+  }
+  gArea = "quick-area"; gRestart = startWeakMode; weakSession = true;
+  gQuestions = shuffle(due);
+  gIdx = 0; gCorrect = 0;
+  go("quick"); renderGrammar();
+}
+
 /* ==================== navigation ==================== */
 function go(v) {
   document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
@@ -776,6 +879,7 @@ function speakCard() { speak(VOCAB[vocabLevel][vocabIdx].w); }
 /* ==================== quiz engine (grammar) ==================== */
 const QUIZ_SIZE = 10;
 let grammarStarted = false, gQuestions = [], gIdx = 0, gCorrect = 0, gAnswered = false;
+let gArea = "grammar-area", gRestart = null;
 
 function shuffle(arr) {
   const a = arr.slice();
@@ -784,19 +888,23 @@ function shuffle(arr) {
 }
 function startGrammar() {
   grammarStarted = true;
+  gArea = "grammar-area"; gRestart = startGrammar; weakSession = false;
   gQuestions = shuffle(GRAMMAR).slice(0, QUIZ_SIZE);
   gIdx = 0; gCorrect = 0;
   renderGrammar();
 }
 function renderGrammar() {
-  const area = document.getElementById("grammar-area");
+  const area = document.getElementById(gArea);
   if (gIdx >= gQuestions.length) {
     const pct = Math.round(gCorrect / gQuestions.length * 100);
-    const msg = pct >= 90 ? "素晴らしい!この調子で本番へ 🎉" : pct >= 70 ? "好調です。間違えた問題の解説を復習しましょう。" : "解説をじっくり読んで、もう1セット挑戦しましょう。";
+    const msg = weakSession
+      ? (pct >= 80 ? "弱点がしっかり潰れてきています 💪" : "繰り返しが定着への近道。明日また出題されます。")
+      : pct >= 90 ? "素晴らしい!この調子で本番へ 🎉" : pct >= 70 ? "好調です。間違えた問題の解説を復習しましょう。" : "解説をじっくり読んで、もう1セット挑戦しましょう。";
     area.innerHTML = `<div class="card result-big">
       <div class="score">${gCorrect} / ${gQuestions.length}</div>
       <div class="msg">正答率 ${pct}%<br>${msg}</div>
-      <button class="btn" style="margin-top:18px;" onclick="startGrammar()">もう1セット挑戦</button>
+      <button class="btn" style="margin-top:18px;" onclick="gRestart()">もう1セット挑戦</button>
+      <button class="btn ghost" style="margin-top:10px;" onclick="go('home')">ホームへ</button>
     </div>`;
     return;
   }
@@ -819,9 +927,10 @@ function answerGrammar(i, btn) {
   if (gAnswered) return;
   gAnswered = true;
   const q = gQuestions[gIdx];
-  const btns = document.querySelectorAll("#grammar-area .choice");
+  const btns = document.querySelectorAll("#" + gArea + " .choice");
   btns[q.a].classList.add("correct");
   if (i === q.a) { gCorrect++; } else { btn.classList.add("wrong"); }
+  if (q.id) { if (i === q.a) srsMarkCorrect(q.id); else srsMarkWrong(q.id); }
   recordAnswer(i === q.a);
   document.getElementById("g-explain").classList.add("show");
 }
@@ -1075,6 +1184,7 @@ function speakResult() {
 /* ==================== init ==================== */
 vocabIdx = store.get("vocabIdx_600", 0);
 renderStats();
+renderWeakBadge();
 renderCard();
 renderPhraseCats();
 renderPhrases();
